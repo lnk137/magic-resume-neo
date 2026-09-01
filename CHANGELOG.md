@@ -1,6 +1,21 @@
 # Changelog
 
 
+## v2.0.8
+
+[compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.7...main)
+
+### 🚀 Enhancements
+
+- Add long-page PDF export ([5351db3](https://github.com/JOYCEQL/magic-resume/commit/5351db3))
+- Add single long PNG export ([ba4f46b](https://github.com/JOYCEQL/magic-resume/commit/ba4f46b))
+- Add font preloading in ResumeWorkbench and optimize SectionTitle by removing unnecessary store dependencies ([0a08e50](https://github.com/JOYCEQL/magic-resume/commit/0a08e50))
+
+### ❤️ Contributors
+
+- JOYCEQL <1449239013@qq.com>
+- Furina <3559551198@qq.com>
+
 ## v2.0.7
 
 [compare changes](https://github.com/JOYCEQL/magic-resume/compare/v2.0.6...main)
