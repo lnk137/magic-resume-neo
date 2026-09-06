@@ -90,12 +90,12 @@ This will:
 - Start the container in the background
 
 
-## 📝 License and Commercial Use
+## 📝 License and Usage Restrictions
 
-The source code of this project is open-sourced under the **Apache 2.0** license, but with **strict commercial use restrictions**:
+The source code of this project is released under the **Apache 2.0** license with an additional **non-commercial use restriction**:
 
 - **Free for Personal Use**: Free to use purely for personal, non-commercial purposes (e.g., personal learning, creating your own resume).
-- **Commercial License Required**: Unauthorized commercial use is strictly prohibited. Any organization or individual that provides it as a service (SaaS/PaaS, etc.) to the public for profit, uses it for enterprise commercial operations, or conducts secondary commercial development, **must obtain a commercial license, regardless of whether the source code has been modified**.
+- **Commercial Use Prohibited**: The project may not be used for any commercial purpose, including providing it as a paid or profit-generating service (such as SaaS/PaaS), enterprise commercial operations, resale, or secondary commercial development, **regardless of whether the source code has been modified**.
 
 Please see the [LICENSE](LICENSE) file for detailed terms.
 
@@ -104,8 +104,8 @@ Please see the [LICENSE](LICENSE) file for detailed terms.
 - [x] AI-assisted writing
 - [x] Multi-language support
 - [ ] Support for more resume templates
-- [ ] Support for more export formats
-- [ ] Import PDF, Markdown, etc.
+- [x] Support for more export formats
+- [x] Import PDF, Markdown, etc.
 - [x] Custom model
 - [x] Auto one page
 - [ ] Online resume hosting
