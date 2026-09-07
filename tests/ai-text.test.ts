@@ -17,6 +17,7 @@ for (const provider of AI_PROVIDERS) {
       const request = new Request("http://localhost/api", { method: "POST", body: JSON.stringify({ connection, content: "简历正文" }) });
       const response = await handleTextRequest(request, task, (async (_url, options) => {
         assert.ok((String(_url) + String(options?.body)).includes("test-model"));
+        assert.equal(options?.redirect, "manual");
         return Response.json(payload(connection.protocol, task === "test" ? "OK" : '{"errors":[]}'));
       }) as typeof fetch);
       assert.equal(response.status, 200);

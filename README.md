@@ -71,6 +71,16 @@ pnpm dev
 pnpm build
 ```
 
+### AI provider networking
+
+Cloudflare Workers use the platform's native `fetch` and do not need an application-level proxy. For Node.js or Docker deployments in regions that cannot directly reach OpenAI, Gemini, or Anthropic, set `AI_PROXY_URL`. `HTTPS_PROXY` and `HTTP_PROXY` are also supported as fallbacks.
+
+```bash
+AI_PROXY_URL=http://127.0.0.1:7890
+```
+
+DeepSeek, Qwen, and Doubao continue to use a direct connection.
+
 
 ## 🐳 Docker Deployment
 

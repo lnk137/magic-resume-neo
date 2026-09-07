@@ -6,7 +6,6 @@ import {
   type AIProtocol,
 } from "../../config/ai-models";
 import { ResumeImportError } from "../resume-import-schema";
-import { ensureGeminiProxyDispatcher } from "./gemini";
 
 export const asRecord = (value: unknown): Record<string, unknown> =>
   value !== null && typeof value === "object" && !Array.isArray(value)
@@ -16,6 +15,58 @@ const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
 const textValue = (value: unknown) => (typeof value === "string" ? value : "");
 const RETRYABLE_UPSTREAM_STATUSES = new Set([500, 502, 503, 504]);
 const UPSTREAM_RETRY_DELAYS_MS = [250, 750] as const;
+const PROXY_ELIGIBLE_PROVIDERS = new Set<AIConnection["provider"]>([
+  "openai",
+  "gemini",
+  "anthropic",
+]);
+
+type ProxyTransport = {
+  dispatcher: unknown;
+  fetcher: typeof fetch;
+};
+
+let proxyTransport: Promise<ProxyTransport> | undefined;
+
+function isCloudflareWorker() {
+  return "WebSocketPair" in globalThis;
+}
+
+function getProxyUrl() {
+  return (
+    process.env.AI_PROXY_URL ||
+    process.env.HTTPS_PROXY ||
+    process.env.https_proxy ||
+    process.env.HTTP_PROXY ||
+    process.env.http_proxy
+  );
+}
+
+async function getProxyTransport(
+  provider: AIConnection["provider"],
+  fetcher: typeof fetch,
+): Promise<ProxyTransport | undefined> {
+  if (
+    fetcher !== fetch ||
+    !PROXY_ELIGIBLE_PROVIDERS.has(provider) ||
+    isCloudflareWorker()
+  )
+    return undefined;
+  const proxyUrl = getProxyUrl();
+  if (!proxyUrl) return undefined;
+
+  proxyTransport ??= (async () => {
+    // Keep Node-only networking out of the Cloudflare Worker bundle. Vite
+    // preserves this runtime import because the package name is not static.
+    const packageName = "undici";
+    const undici = await import(/* @vite-ignore */ packageName);
+    return {
+      dispatcher: new undici.ProxyAgent(proxyUrl),
+      fetcher: undici.fetch as unknown as typeof fetch,
+    };
+  })();
+  return proxyTransport;
+}
 
 function waitForRetry(delay: number, signal: AbortSignal) {
   return new Promise<void>((resolve, reject) => {
@@ -258,17 +309,36 @@ export async function fetchAI(
   fetcher: typeof fetch = fetch,
 ) {
   const request = buildAIRequest(connection, input);
-  ensureGeminiProxyDispatcher();
+  const transport = await getProxyTransport(connection.provider, fetcher);
+  const requestFetch = transport?.fetcher ?? fetcher;
   const body = JSON.stringify(request.body);
   let response: Response | undefined;
   for (let attempt = 0; attempt <= UPSTREAM_RETRY_DELAYS_MS.length; attempt++) {
-    response = await fetcher(request.url, {
-      method: "POST",
-      headers: request.headers,
-      body,
-      signal,
-      redirect: "error",
-    });
+    try {
+      response = await requestFetch(request.url, {
+        method: "POST",
+        headers: request.headers,
+        body,
+        signal,
+        redirect: "manual",
+        ...(transport ? { dispatcher: transport.dispatcher } : {}),
+      } as RequestInit);
+    } catch (error) {
+      console.error("[ai-provider] Network request failed", {
+        provider: connection.provider,
+        model: connection.model,
+        error:
+          error instanceof Error
+            ? `${error.name}: ${error.message}`
+            : "Unknown error",
+      });
+      if (
+        error instanceof Error &&
+        ["TimeoutError", "AbortError"].includes(error.name)
+      )
+        throw error;
+      throw new ResumeImportError("networkError", 502);
+    }
     if (
       response.ok ||
       !RETRYABLE_UPSTREAM_STATUSES.has(response.status) ||

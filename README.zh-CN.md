@@ -71,6 +71,16 @@ pnpm dev
 pnpm build
 ```
 
+### AI 厂商网络配置
+
+Cloudflare Workers 使用平台原生 `fetch`，无需配置应用层代理。Node.js 或 Docker 部署在无法直连 OpenAI、Gemini、Anthropic 的地区时，可以设置 `AI_PROXY_URL`；同时兼容 `HTTPS_PROXY` 和 `HTTP_PROXY`。
+
+```bash
+AI_PROXY_URL=http://127.0.0.1:7890
+```
+
+DeepSeek、通义千问和豆包保持直连。
+
 ## 🐳 Docker 部署
 
 ### Docker Compose
