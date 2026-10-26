@@ -5,3 +5,5 @@ The content editor keeps a module switcher and **添加模块** button pinned at
 The add menu offers missing template modules and unlimited custom modules. Creating one immediately selects its editor.
 
 Custom entries expose **字段与排版** on expansion. Each field can have its editor label renamed or be hidden from the resume without deleting its contents; body alignment is configurable. Visibility and alignment apply across all nine templates and their exports. Use the copy icon to duplicate an entry, including its content and formatting, with an independent ID.
+
+**复制模块** creates a new custom module with independent entry IDs, field settings and colors, and selects it immediately. Entry and module copies preserve their content without sharing mutable data.
