@@ -3,8 +3,8 @@ export function sanitizeMcpRichText(html: string): string {
   const template = document.createElement('template');
   template.innerHTML = html;
   const allowed = new Set(['P','DIV','SPAN','BR','UL','OL','LI','STRONG','B','EM','I','U','S','H1','H2','H3','H4','BLOCKQUOTE','CODE','PRE','A','MARK']);
-  for (const element of [...template.content.querySelectorAll('*')].reverse()) {
-    if (!allowed.has(element.tagName)) { element.replaceWith(...element.childNodes); continue; }
+  for (const element of Array.from(template.content.querySelectorAll('*')).reverse()) {
+    if (!allowed.has(element.tagName)) { element.replaceWith(...Array.from(element.childNodes)); continue; }
     const style = (element as HTMLElement).style;
     const retained: Record<string,string> = {};
     for (const name of ['color','background-color','text-align','text-decoration','font-weight','font-style','font-size']) {
@@ -15,7 +15,7 @@ export function sanitizeMcpRichText(html: string): string {
     const fontSize = style.getPropertyValue('font-size');
     if (/^\d+(?:\.\d+)?(?:px|pt|em|rem)$/.test(fontSize) && parseFloat(fontSize) <= 200) retained['font-size'] = fontSize;
     const markColor = element.getAttribute('data-color') || ''; 
-    for (const attr of [...element.attributes]) element.removeAttribute(attr.name);
+    for (const attr of Array.from(element.attributes)) element.removeAttribute(attr.name);
     for (const [name,value] of Object.entries(retained)) style.setProperty(name,value);
     if (element.tagName === 'MARK' && /^#[\da-f]{6}$/i.test(markColor)) element.setAttribute('data-color', markColor);
     if (element.tagName === 'A' && /^(https?:\/\/|mailto:|tel:|#)/i.test(href)) { element.setAttribute('href',href); element.setAttribute('rel','noopener noreferrer'); }
