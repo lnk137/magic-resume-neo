@@ -1,0 +1,8 @@
+allowBuilds:
+  '@heroui/shared-utils': false
+  '@parcel/watcher': true
+  core-js: false
+  esbuild: true
+  puppeteer: false
+  sharp: true
+  workerd: false
