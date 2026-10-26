@@ -172,7 +172,13 @@ export const RESUME_DATE_FORMATS = [
 
 export type ResumeDateFormat = (typeof RESUME_DATE_FORMATS)[number];
 
+export type TextColorRole = "body" | "name" | "title" | "subtitle" | "date" | "section";
+
 export type GlobalSettings = {
+  /** Optional semantic colors; missing values preserve the original template. */
+  textColors?: Partial<Record<TextColorRole, string>>;
+  /** Stable IDs keep overrides attached when entries are reordered. */
+  fieldColors?: Record<string, string>;
   themeColor?: string | undefined;
   fontFamily?: string | undefined;
   baseFontSize?: number | undefined;
@@ -195,7 +201,13 @@ export interface ResumeTheme {
   color: string;
 }
 
+export type CustomField = "title" | "subtitle" | "dateRange" | "description";
+
 export interface CustomItem {
+  hiddenFields?: CustomField[];
+  fieldLabels?: Partial<Record<CustomField, string>>;
+  /** Body text alignment; absent preserves the selected template. */
+  alignment?: "left" | "center" | "right";
   id: string;
   title: string;
   subtitle: string;

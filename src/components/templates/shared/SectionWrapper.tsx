@@ -1,3 +1,6 @@
+import { ResumeSectionContext } from "./ResumeText";
+import { useTemplateContext } from "../TemplateContext";
+import { resolveTextColor } from "@/lib/textColors";
 import { motion } from "framer-motion";
 import { useResumeStore } from "@/store/useResumeStore";
 import { cn } from "@/lib/utils";
@@ -20,6 +23,7 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
     style,
 }) => {
     const { setActiveSection } = useResumeStore();
+    const settings = useTemplateContext()?.globalSettings;
 
     return (
         <motion.div
@@ -29,10 +33,10 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
                 "hover:bg-[#f9f8f3]",
                 className
             )}
-            style={style}
+            style={{ color: resolveTextColor(settings, undefined, "body"), ...style }}
             onClick={() => setActiveSection(sectionId)}
         >
-            {children}
+            <ResumeSectionContext.Provider value={sectionId}>{children}</ResumeSectionContext.Provider>
         </motion.div>
     );
 };
