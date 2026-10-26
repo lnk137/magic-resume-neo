@@ -30,7 +30,7 @@ export default function LandingHeader() {
           aria-label={t("nav.home")}
         >
           <Logo size={40} className="landing-brand-logo" />
-          <span>{locale === "zh" ? "魔方简历" : "Magic Resume"}</span>
+          <span>{locale === "zh" ? "魔方简历 Neo" : "Magic Resume Neo"}</span>
         </Link>
         <div className="landing-header-actions">
           <Link

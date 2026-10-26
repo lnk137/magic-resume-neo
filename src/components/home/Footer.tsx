@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="landing-footer">
       <div className="landing-nav-shell">
         <a href={`/${locale}`} className="landing-brand">
-          <span>{locale === "zh" ? "魔方简历" : "Magic Resume"}</span>
+          <span>{locale === "zh" ? "魔方简历 Neo" : "Magic Resume Neo"}</span>
         </a>
         <p>{t("footer.note")}</p>
         <a href={GITHUB_REPO_URL} target="_blank" rel="noopener noreferrer">

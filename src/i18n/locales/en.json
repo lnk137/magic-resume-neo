@@ -1,8 +1,8 @@
 {
   "common": {
-    "title": "Magic Resume",
+    "title": "Magic Resume Neo",
     "subtitle": "AI Driven Resume Editor",
-    "description": "Magic Resume is an open source resume editor, free, privacy-first. No registration required, all data stored locally, support data backup and export, ensuring your resume data is always available.",
+    "description": "Magic Resume Neo is an open source resume editor, free, privacy-first. No registration required, all data stored locally, support data backup and export, ensuring your resume data is always available.",
     "dashboard": "Dashboard",
     "edit": "Edit",
     "delete": "Delete",
@@ -17,7 +17,7 @@
   },
   "home": {
     "header": {
-      "title": "Magic Resume",
+      "title": "Magic Resume Neo",
       "startButton": "Get Started",
       "features": "Features",
       "pricing": "Pricing",
@@ -29,12 +29,12 @@
     "hero": {
       "badge": "Smart Resume Creation",
       "title": "Make Resume Creation Simple and Smart",
-      "subtitle": "Magic Resume uses AI technology to help you quickly create professional resumes. No registration required, free to use, with secure data storage.",
+      "subtitle": "Magic Resume Neo uses AI technology to help you quickly create professional resumes. No registration required, free to use, with secure data storage.",
       "cta": "Get Started",
       "secondary": "Browse Templates"
     },
     "features": {
-      "title": "Why Choose Magic Resume?",
+      "title": "Why Choose Magic Resume Neo?",
       "subtitle": "We provide an all-in-one resume solution to make your job search journey smoother",
       "ai": {
         "badge": "AI Smart Check",
@@ -67,24 +67,24 @@
       "content": "New AI Resume Enhancement Feature is Live"
     },
     "footer": {
-      "copyright": " 2025 Magic Resume. All rights reserved."
+      "copyright": " 2025 Magic Resume Neo. All rights reserved."
     },
     "changelog": "Changelog",
     "cta": {
       "title": "Start Your New Career Chapter",
-      "description": "Start using Magic Resume now to create an impressive resume",
+      "description": "Start using Magic Resume Neo now to create an impressive resume",
       "button": "Start Using for Free"
     },
     "faq": {
       "title": "Frequently Asked Questions",
       "items": [
         {
-          "question": "Is Magic Resume free to use?",
-          "answer": "Magic Resume is currently free, meeting basic resume creation needs. The open-source version's features will remain unchanged"
+          "question": "Is Magic Resume Neo free to use?",
+          "answer": "Magic Resume Neo is currently free, meeting basic resume creation needs. The open-source version's features will remain unchanged"
         },
         {
           "question": "Is my resume data secure?",
-          "answer": "Magic Resume uses local storage. Resume data is stored in your current browser, with an optional local backup folder. When you use AI features, relevant content is sent to your configured model provider."
+          "answer": "Magic Resume Neo uses local storage. Resume data is stored in your current browser, with an optional local backup folder. When you use AI features, relevant content is sent to your configured model provider."
         },
         {
           "question": "What export formats are supported?",
@@ -106,7 +106,7 @@
         "features": "Features",
         "templates": "Templates",
         "label": "Main navigation",
-        "home": "Magic Resume home",
+        "home": "Magic Resume Neo home",
         "language": "切换到中文",
         "theme": "Change theme",
         "menu": "Open menu",
@@ -114,7 +114,7 @@
         "skip": "Skip to content"
       },
       "hero": {
-        "editorAlt": "Magic Resume workspace with content editing and a live resume preview",
+        "editorAlt": "Magic Resume Neo workspace with content editing and a live resume preview",
         "free": "Free. No account needed.",
         "ai": "AI writing assistance",
         "local": "Stored on your device"
@@ -166,7 +166,7 @@
   },
   "dashboard": {
     "sidebar": {
-      "appName": "Magic Resume",
+      "appName": "Magic Resume Neo",
       "resumes": "Resumes",
       "settings": "Settings",
       "templates": "Templates",
@@ -582,7 +582,7 @@
       "printDesc": "Save via system print dialog. Use as a fallback or for custom margins.",
       "jsonDesc": "Export your resume data as JSON to backup or transfer between devices.",
       "markdownDesc": "Convert to plain Markdown text for easy sharing with AI models.",
-      "privacyNotice": "Magic Resume promise never to collect, upload, or store any of your resume data. Your privacy is fully protected."
+      "privacyNotice": "Magic Resume Neo promise never to collect, upload, or store any of your resume data. Your privacy is fully protected."
     },
     "button": {
       "export": "Export",
@@ -1233,7 +1233,7 @@
   },
   "faqDialog": {
     "title": "Frequently Asked Questions (FAQ)",
-    "description": "Common tips and solutions for the Magic Resume workbench.",
+    "description": "Common tips and solutions for the Magic Resume Neo workbench.",
     "items": {
       "browser-compatibility": {
         "question": "Which browser is recommended?",
