@@ -3,10 +3,12 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { extname, normalize, resolve } from "node:path";
 import { Readable } from "node:stream";
 import serverEntry from "./dist/server/server.js";
+import { createMcpBridge } from "./mcp/bridge-server.mjs";
 
 const clientDir = resolve(process.cwd(), "dist/client");
 const port = Number(process.env.PORT || 3000);
-const host = process.env.HOSTNAME || "0.0.0.0";
+const host = process.env.HOSTNAME || "127.0.0.1";
+const handleMcp = createMcpBridge();
 
 const MIME_TYPES = {
   ".css": "text/css; charset=utf-8",
@@ -99,6 +101,7 @@ createServer(async (req, res) => {
     const protocol = (req.headers["x-forwarded-proto"] || "http").toString().split(",")[0].trim();
     const url = new URL(req.url || "/", `${protocol}://${hostHeader}`);
 
+    if (await handleMcp(req, res, url)) return;
     if (tryServeStatic(req, res, url)) return;
 
     const method = (req.method || "GET").toUpperCase();
