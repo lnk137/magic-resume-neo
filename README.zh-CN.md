@@ -1,3 +1,15 @@
+# Magic Resume Neo · 魔方简历 Neo
+
+基于 [JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume) 的本机定制版本。保留上游协议与署名。
+
+- [本机部署与数据迁移](docs/local-deployment.md)
+- [文字配色与模块编辑](docs/neo-editor.md)
+- [MCP 与 AI 修改](docs/mcp.md)
+
+本机入口：<http://127.0.0.1:3210/app/dashboard>。下方保留上游说明。
+
+---
+
 <div align="center">
 
 # ✨ Magic Resume ✨

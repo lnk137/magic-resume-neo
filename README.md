@@ -1,3 +1,15 @@
+# Magic Resume Neo
+
+A local customized edition of [JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume), retaining the upstream license and attribution.
+
+- [Local deployment and data migration](docs/local-deployment.md)
+- [Text colors and module editing](docs/neo-editor.md)
+- [MCP and AI editing](docs/mcp.md)
+
+Local app: <http://127.0.0.1:3210/app/dashboard>. Original project documentation follows.
+
+---
+
 <div align="center">
 
 # ✨ Magic Resume ✨
