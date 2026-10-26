@@ -1,3 +1,4 @@
+import { ModuleNavigation } from "./ModuleNavigation";
 import PublicationsPanel from "./publications/PublicationsPanel";
 import SectionIcon from "@/components/shared/SectionIcon";
 import React from "react";
@@ -60,6 +61,7 @@ export function EditPanel() {
         "bg-background border-border"
       )}
     >
+      <ModuleNavigation />
       <div className="p-4">
         <motion.div
           className={cn(
