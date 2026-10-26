@@ -1,3 +1,5 @@
+import { visibleCustomItems } from "@/lib/customItems";
+import { ResumeText } from "@/components/templates/shared/ResumeText";
 import { AnimatePresence, motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
@@ -16,7 +18,7 @@ interface CustomSectionProps {
 
 const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = true }: CustomSectionProps) => {
     const locale = useLocale();
-    const visibleItems = items?.filter((item) => item.visible && (item.title || item.description));
+    const visibleItems = visibleCustomItems(items);
     const centerSubtitle = globalSettings?.centerSubtitle;
     const flexLayout = globalSettings?.flexibleHeaderLayout;
 
@@ -28,25 +30,27 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                     <motion.div key={item.id} layout="position" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
                         <motion.div layout="position" className="flex items-center justify-between gap-4">
                             <div className={cn("flex items-center gap-2 truncate", flexLayout ? "" : "flex-1")}>
-                                <h4 className="font-bold truncate" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{item.title}</h4>
+                                {item.title && (<h4 className="font-bold truncate" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{<ResumeText field={`customData.${sectionId}.${item.id}.title`} role="title">{item.title}</ResumeText>}</h4>)}
                             </div>
-                            {centerSubtitle && (
+                            {centerSubtitle && item.subtitle && (
                                 <motion.div layout="position" className={cn("text-subtitleFont truncate", flexLayout ? "ml-[16px]" : "flex-1")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                    {item.subtitle}
+                                    {<ResumeText field={`customData.${sectionId}.${item.id}.subtitle`} role="subtitle">{item.subtitle}</ResumeText>}
                                 </motion.div>
                             )}
-                            <span className={cn("text-subtitleFont shrink-0 whitespace-nowrap", flexLayout ? "ml-auto" : "text-right")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                {formatDateString(item.dateRange, locale, globalSettings?.dateFormat)}
-                            </span>
+                            {item.dateRange && (<span className={cn("text-subtitleFont shrink-0 whitespace-nowrap", flexLayout ? "ml-auto" : "text-right")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                    <ResumeText field={`customData.${sectionId}.${item.id}.dateRange`} role="date">{formatDateString(item.dateRange, locale, globalSettings?.dateFormat)}</ResumeText>
+                                </span>)}
                         </motion.div>
                         {!centerSubtitle && item.subtitle && (
-                            <motion.div layout="position" className="text-subtitleFont mt-1" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{item.subtitle}</motion.div>
+                            <motion.div layout="position" className="text-subtitleFont mt-1" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{<ResumeText field={`customData.${sectionId}.${item.id}.subtitle`} role="subtitle">{item.subtitle}</ResumeText>}</motion.div>
                         )}
                         {item.description && (
+                            <ResumeText field={`customData.${sectionId}.${item.id}.description`} role="body">
                             <motion.div layout="position" className="mt-1 text-baseFont"
-                                style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
+                                style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6, textAlign: item.alignment }}
                                 dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(item.description) }}
                             />
+                            </ResumeText>
                         )}
                     </motion.div>
                 ))}

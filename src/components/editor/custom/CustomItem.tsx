@@ -1,3 +1,4 @@
+import { cloneCustomItems } from "@/lib/customItems";
 import { useCallback, useState } from "react";
 import {
   motion,
@@ -8,34 +9,64 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
-import { GripVertical, Eye, EyeOff, ChevronDown, Trash2 } from "lucide-react";
+import { GripVertical, Eye, EyeOff, ChevronDown, Trash2, Copy, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import Field from "../Field";
 
-import { CustomItem as CustomItemType } from "@/types/resume";
+import { CustomItem as CustomItemType, CustomField } from "@/types/resume";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import ThemeModal from "@/components/shared/ThemeModal";
 const CustomItemEditor = ({
   item,
   onSave,
+  sectionId,
 }: {
   item: CustomItemType;
+  sectionId: string;
   onSave: (item: CustomItemType) => void;
 }) => {
   const handleChange = (field: keyof CustomItemType, value: string) => {
     onSave({ ...item, [field]: value });
   };
 
+  const fields: { key: CustomField; label: string }[] = [
+    { key: "title", label: "标题" }, { key: "subtitle", label: "副标题" },
+    { key: "dateRange", label: "时间范围" }, { key: "description", label: "详细描述" },
+  ];
+  const label = (field: CustomField) => item.fieldLabels?.[field] || fields.find((entry) => entry.key === field)!.label;
   return (
     <div className="space-y-5">
+      <details className="rounded-md border border-border">
+        <summary className="cursor-pointer px-3 py-2 text-sm font-medium">字段与排版</summary>
+        <div className="space-y-3 border-t border-border p-3">
+          {fields.map(({ key, label: defaultLabel }) => (
+            <div key={key} className="flex items-center gap-3">
+              <Input aria-label={`${defaultLabel}字段名称`} placeholder={defaultLabel} value={item.fieldLabels?.[key] ?? ""} onChange={(event) => onSave({ ...item, fieldLabels: { ...item.fieldLabels, [key]: event.target.value } })} className="h-8 min-w-0 flex-1" />
+              <Switch aria-label={`在简历中显示${defaultLabel}`} checked={!item.hiddenFields?.includes(key)} onCheckedChange={(checked) => onSave({ ...item, hiddenFields: checked ? (item.hiddenFields ?? []).filter((field) => field !== key) : [...(item.hiddenFields ?? []), key] })} />
+            </div>
+          ))}
+          <div className="flex items-center justify-between gap-3 pt-1">
+            <span className="text-sm">正文对齐</span>
+            <div className="flex gap-1">
+              {([{ value: "left", label: "左对齐", icon: AlignLeft }, { value: "center", label: "居中", icon: AlignCenter }, { value: "right", label: "右对齐", icon: AlignRight }] as const).map(({ value, label, icon: Icon }) => (
+                <Button key={value} type="button" variant={(item.alignment ?? "left") === value ? "secondary" : "ghost"} size="sm" aria-label={label} aria-pressed={(item.alignment ?? "left") === value} onClick={() => onSave({ ...item, alignment: value })}><Icon className="h-4 w-4" /></Button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </details>
       <div className="grid gap-5">
         <div className="grid grid-cols-2 gap-4">
           <Field
-            label="标题"
+            label={label("title")}
+            colorPath={`customData.${sectionId}.${item.id}.title`}
             value={item.title}
             onChange={(value) => handleChange("title", value)}
             placeholder="标题"
           />
           <Field
-            label="副标题"
+            label={label("subtitle")}
+            colorPath={`customData.${sectionId}.${item.id}.subtitle`}
             value={item.subtitle}
             onChange={(value) => handleChange("subtitle", value)}
             placeholder="副标题"
@@ -43,7 +74,8 @@ const CustomItemEditor = ({
         </div>
 
         <Field
-          label="时间范围"
+          label={label("dateRange")}
+            colorPath={`customData.${sectionId}.${item.id}.dateRange`}
           value={item.dateRange}
           onChange={(value) => handleChange("dateRange", value)}
           type="date-range"
@@ -51,7 +83,8 @@ const CustomItemEditor = ({
         />
 
         <Field
-          label="详细描述"
+          label={label("description")}
+            colorPath={`customData.${sectionId}.${item.id}.description`}
           value={item.description}
           onChange={(value) => handleChange("description", value)}
           type="editor"
@@ -69,7 +102,7 @@ const CustomItem = ({
   item: CustomItemType;
   sectionId: string;
 }) => {
-  const { updateCustomItem, removeCustomItem } = useResumeStore();
+  const { updateCustomItem, removeCustomItem, updateResume, activeResume } = useResumeStore();
   const dragControls = useDragControls();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -106,7 +139,7 @@ const CustomItem = ({
           dragControls.start(event);
         }}
         className={cn(
-          "w-12 flex items-center justify-center border-r shrink-0 touch-none",
+          "w-8 flex items-center justify-center border-r shrink-0 touch-none",
           "border-border",
           expandedId === item.id
             ? "cursor-not-allowed"
@@ -125,7 +158,7 @@ const CustomItem = ({
       <div className="flex-1 min-w-0">
         <div
           className={cn(
-            "px-4 py-4 flex items-center justify-between cursor-pointer select-none",
+            "px-3 py-3 flex items-center justify-between cursor-pointer select-none",
             expandedId === item.id && "bg-muted/10"
           )}
           onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
@@ -150,10 +183,12 @@ const CustomItem = ({
             )}
           </div>
 
-          <div className="flex items-center gap-2 ml-4 shrink-0">
+          <div className="flex items-center gap-0.5 ml-2 shrink-0">
             <Button
               variant="ghost"
               size="sm"
+              className="h-8 w-8 p-0"
+              aria-label={item.visible ? "隐藏条目" : "显示条目"}
               disabled={isUpdating}
               onClick={handleVisibilityToggle}
             >
@@ -163,11 +198,23 @@ const CustomItem = ({
                 <EyeOff className="w-4 h-4" />
               )}
             </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label="复制条目" title="复制条目" onClick={(event) => {
+              event.stopPropagation();
+              if (!activeResume) return;
+              const entries = activeResume.customData?.[sectionId] ?? [];
+              const index = entries.findIndex((entry) => entry.id === item.id);
+              const { items: [copy], fieldColors } = cloneCustomItems([item], sectionId, sectionId, activeResume.globalSettings?.fieldColors);
+              updateResume(activeResume.id, {
+                customData: { ...activeResume.customData, [sectionId]: [...entries.slice(0, index + 1), copy, ...entries.slice(index + 1)] },
+                globalSettings: { ...activeResume.globalSettings, fieldColors },
+              });
+            }}><Copy className="h-4 w-4" /></Button>
             <Button
               variant="ghost"
               size="sm"
+              aria-label="删除条目"
               className={cn(
-                "text-sm",
+                "text-sm h-8 w-8 p-0",
                 "dark:hover:bg-red-900/50 dark:text-red-400 hover:bg-red-50 text-red-600"
               )}
               onClick={(e) => {
@@ -224,6 +271,7 @@ const CustomItem = ({
                 />
                 <CustomItemEditor
                   item={item}
+                  sectionId={sectionId}
                   onSave={(updatedItem) => {
                     updateCustomItem(sectionId, item.id, updatedItem);
                   }}
