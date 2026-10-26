@@ -1,3 +1,4 @@
+import { FieldColor } from "./FieldColor";
 import { ModuleNavigation } from "./ModuleNavigation";
 import PublicationsPanel from "./publications/PublicationsPanel";
 import SectionIcon from "@/components/shared/SectionIcon";
@@ -85,7 +86,7 @@ export function EditPanel() {
               <>
                 <input
                   className={cn(
-                    "flex-1 text-lg  font-medium  text-primary border-black  bg-transparent outline-none   pb-1 text-primary"
+                    "flex-1 min-w-0 text-lg  font-medium  text-primary border-black  bg-transparent outline-none   pb-1 text-primary"
                   )}
                   type="text"
                   value={
@@ -114,6 +115,7 @@ export function EditPanel() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+                <FieldColor path={`sections.${activeSection}.title`} label="模块标题" />
               </>
             )}
           </div>
