@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import SectionTitle from "./SectionTitle";
@@ -34,35 +35,35 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ projects, globalSetting
                         <motion.div key={project.id} style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
                             <motion.div className="flex items-center gap-2">
                                 <div className={`flex items-center gap-2 ${flexLayout ? "" : "flex-[1.5]"}`}>
-                                    <h3 className="font-bold" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{project.name}</h3>
+                                    <h3 className="font-bold" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}><ResumeText field={`projects.${project.id}.name`} role="title">{project.name}</ResumeText></h3>
                                 </div>
                                 {projectLink && !centerSubtitle && (
                                     <a href={projectLink.href} target="_blank" rel="noopener noreferrer"
                                         className={`underline ${flexLayout ? "" : "flex-1"}`} title={projectLink.title} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                        {projectLink.label}
+                                        <ResumeText field={`projects.${project.id}.linkLabel`} role="subtitle">{projectLink.label}</ResumeText>
                                     </a>
                                 )}
                                 {!projectLink && !centerSubtitle && !flexLayout && <div className="flex-1" />}
                                 {centerSubtitle && (
                                     <motion.div layout="position" className={`text-subtitleFont ${flexLayout ? "ml-[16px]" : "flex-1"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                        {project.role}
+                                        <ResumeText field={`projects.${project.id}.role`} role="subtitle">{project.role}</ResumeText>
                                     </motion.div>
                                 )}
                                 <div className={`text-subtitleFont shrink-0 ${flexLayout ? "ml-auto" : "flex-1 text-right"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                    {formatDateString(project.date, locale, globalSettings?.dateFormat)}
+                                    <ResumeText field={`projects.${project.id}.date`} role="date">{formatDateString(project.date, locale, globalSettings?.dateFormat)}</ResumeText>
                                 </div>
                             </motion.div>
                             {project.role && !centerSubtitle && (
-                                <motion.div layout="position" className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{project.role}</motion.div>
+                                <motion.div layout="position" className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}><ResumeText field={`projects.${project.id}.role`} role="subtitle">{project.role}</ResumeText></motion.div>
                             )}
                             {projectLink && centerSubtitle && (
-                                <a href={projectLink.href} target="_blank" rel="noopener noreferrer" className="underline" title={projectLink.title} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{projectLink.label}</a>
+                                <a href={projectLink.href} target="_blank" rel="noopener noreferrer" className="underline" title={projectLink.title} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}><ResumeText field={`projects.${project.id}.linkLabel`} role="subtitle">{projectLink.label}</ResumeText></a>
                             )}
                             {project.description && (
-                                <motion.div layout="position" className="mt-1 text-baseFont"
+                                <ResumeText field={`projects.${project.id}.description`} role="body"><motion.div layout="position" className="mt-1 text-baseFont"
                                     style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
                                     dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(project.description) }}
-                                />
+                                /></ResumeText>
                             )}
                         </motion.div>
                     )})}

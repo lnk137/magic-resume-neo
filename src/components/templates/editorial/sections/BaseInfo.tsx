@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import React from "react";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
@@ -74,7 +75,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                 className="font-bold tracking-widest whitespace-normal break-normal [overflow-wrap:normal] text-black"
                 style={{ fontSize: `${(globalSettings?.headerSize || 20) * 2}px`, lineHeight: "1.1", marginBottom: "8px" }}
               >
-                {basic.name}
+                <ResumeText field={"basic.name"} role="name">{basic.name}</ResumeText>
               </motion.h1>
             )}
           </div>
@@ -104,7 +105,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                 className="font-normal tracking-wide text-gray-700 whitespace-normal break-normal [overflow-wrap:normal]"
                 style={{ fontSize: `${globalSettings?.subheaderSize || 16}px`, lineHeight: "1.3" }}
               >
-                {basic.title}
+                <ResumeText field={"basic.title"} role="subtitle">{basic.title}</ResumeText>
               </motion.h2>
             </div>
           )}
@@ -127,16 +128,16 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                     {item.key === "email" ? (
                       <a href={`mailto:${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
                         {globalSettings?.useIconMode ? "" : `${t(`basicPanel.basicFields.${item.key}`)}: `}
-                        {item.value}
+                        <ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText>
                       </a>
                     ) : item.key === "website" || item.key === "github" ? (
                       <a href={item.value.startsWith("http") ? item.value : `https://${item.value}`} className="block min-w-0 transition-colors [overflow-wrap:anywhere] hover:text-black">
                         {globalSettings?.useIconMode ? "" : `${item.label}: `}
-                        {item.value.replace(/^https?:\/\//, "")}
+                        <ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value.replace(/^https?:\/\//, "")}</ResumeText>
                       </a>
                     ) : customFieldHref ? (
                       <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="block min-w-0 underline transition-colors [overflow-wrap:anywhere] hover:text-black">
-                        {item.value}
+                        <ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText>
                       </a>
                     ) : (
                       <span className="block min-w-0 [overflow-wrap:anywhere]">
@@ -147,7 +148,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ basic, globalSettings }) => {
                               ? `${item.label}: `
                               : ""
                             : `${t(`basicPanel.basicFields.${item.key}`)}: `}
-                        {item.value}
+                        <ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText>
                       </span>
                     )}
                   </div>

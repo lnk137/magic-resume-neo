@@ -1,3 +1,4 @@
+import { FieldColor } from "./FieldColor";
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
@@ -21,6 +22,7 @@ import { UnifiedDateRangeInput } from "../ui/unified-date-range-input";
 
 interface FieldProps {
   label?: string;
+  colorPath?: string;
   value: string;
   onChange: (value: string) => void;
   type?: "text" | "textarea" | "date" | "editor" | "date-range";
@@ -32,6 +34,7 @@ interface FieldProps {
 
 const Field = ({
   label,
+  colorPath,
   value,
   onChange,
   type = "text",
@@ -91,12 +94,13 @@ const Field = ({
   };
 
   const renderLabel = () => {
-    if (!label) return null;
+    if (!label && !colorPath) return null;
     return (
       <div className="flex items-center justify-between mb-1.5 font-medium">
         <span className="text-sm text-foreground">
           {label}
         </span>
+        {colorPath && <FieldColor path={colorPath} label={label} />}
         {showPresentSwitch && (
           <div className="flex items-center gap-2">
             <Switch
@@ -153,7 +157,7 @@ const Field = ({
 
   if (type === "textarea") {
     return (
-      <label className="block">
+      <div className="block">
         {renderLabel()}
         <motion.textarea
           value={value}
@@ -165,7 +169,7 @@ const Field = ({
           whileHover={{ scale: 1.005 }}
           whileTap={{ scale: 0.995 }}
         />
-      </label>
+      </div>
     );
   }
 

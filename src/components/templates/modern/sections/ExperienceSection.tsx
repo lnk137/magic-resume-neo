@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Experience, GlobalSettings } from "@/types/resume";
@@ -29,24 +30,24 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
                         <motion.div className="flex items-center justify-between gap-4">
                             <div className={cn("font-bold truncate flex items-center gap-2", flexLayout ? "" : "flex-1")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
                                 <SectionLogo src={exp.logo} config={exp.logoConfig} size={globalSettings?.subheaderSize || 16} />
-                                {exp.company}
+                                <ResumeText field={`experience.${exp.id}.company`} role="title">{exp.company}</ResumeText>
                             </div>
                             {centerSubtitle && (
                                 <motion.div className={cn("text-subtitleFont truncate", flexLayout ? "ml-[16px]" : "flex-1")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                    {exp.position}
+                                    <ResumeText field={`experience.${exp.id}.position`} role="subtitle">{exp.position}</ResumeText>
                                 </motion.div>
                             )}
                             <div className={cn("text-subtitleFont shrink-0 whitespace-nowrap", flexLayout ? "ml-auto" : "text-right")} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-                                {formatDateString(exp.date, locale, globalSettings?.dateFormat)}
+                                <ResumeText field={`experience.${exp.id}.date`} role="date">{formatDateString(exp.date, locale, globalSettings?.dateFormat)}</ResumeText>
                             </div>
                         </motion.div>
                         {exp.position && !centerSubtitle && (
-                            <motion.div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{exp.position}</motion.div>
+                            <motion.div className="text-subtitleFont" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}><ResumeText field={`experience.${exp.id}.position`} role="subtitle">{exp.position}</ResumeText></motion.div>
                         )}
                         {exp.details && (
-                            <motion.div className="mt-1 text-baseFont" dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(exp.details) }}
+                            <ResumeText field={`experience.${exp.id}.details`} role="body"><motion.div className="mt-1 text-baseFont" dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(exp.details) }}
                                 style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
-                            />
+                            /></ResumeText>
                         )}
                     </motion.div>
                 ))}

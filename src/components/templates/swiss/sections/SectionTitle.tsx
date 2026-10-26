@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import { useMemo } from "react";
 import { GlobalSettings } from "@/types/resume";
 import { useTemplateContext } from "../../TemplateContext";
@@ -44,7 +45,7 @@ const SectionTitle = ({ type, title, globalSettings, showTitle = true }: Section
                         color: "#0f172a",
                     }}
                 >
-                    {renderTitle}
+                    <ResumeText role="section">{renderTitle}</ResumeText>
                 </h3>
             </div>
             {/* 不对称的分隔线 */}

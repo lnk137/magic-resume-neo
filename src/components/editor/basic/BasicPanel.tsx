@@ -87,6 +87,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
           )}
         />
         <Field
+          colorPath={`basic.customFields.${field.id}`}
           value={field.value}
           onChange={(value) =>
             onUpdate({
@@ -327,6 +328,7 @@ const BasicPanel: React.FC = () => {
             <div className="flex-1">
               <Field
                 label=""
+                colorPath={`basic.${field.key}`}
                 value={(basic?.[field.key] as string) ?? ""}
                 onChange={(value) =>
                   updateBasicInfo({

@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Education, GlobalSettings } from "@/types/resume";
@@ -35,15 +36,15 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                                         className="font-extrabold text-slate-800 tracking-tight"
                                         style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}
                                     >
-                                        {edu.school}
+                                        <ResumeText field={`education.${edu.id}.school`} role="title">{edu.school}</ResumeText>
                                     </h4>
                                     {centerSubtitle && (
                                         <span
                                             className="font-medium text-slate-500 border-l border-slate-300 pl-3 text-[14px]"
                                             style={{ fontSize: `${(globalSettings?.subheaderSize || 16) - 1}px` }}
                                         >
-                                            {[edu.major, edu.degree].filter(Boolean).join(" · ")}
-                                            {edu.gpa && ` · GPA ${edu.gpa}`}
+                                            {["major", "degree"].filter((key) => edu[key as "major" | "degree"]).map((key, index) => <span key={key}>{index > 0 && " · "}<ResumeText field={`education.${edu.id}.${key}`} role="subtitle">{edu[key as "major" | "degree"]}</ResumeText></span>)}
+                                            {edu.gpa && <ResumeText field={`education.${edu.id}.gpa`} role="subtitle">{` · GPA ${edu.gpa}`}</ResumeText>}
                                         </span>
                                     )}
                                 </div>
@@ -51,7 +52,7 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                                     className="ml-auto self-center font-mono text-slate-400 bg-slate-50 border border-slate-100/80 px-2 py-0.5 rounded text-[11px] font-semibold shrink-0"
                                     suppressHydrationWarning
                                 >
-                                    {formatDateRange(edu.startDate, edu.endDate, locale, globalSettings?.dateFormat)}
+                                    <ResumeText field={`education.${edu.id}.date`} role="date">{formatDateRange(edu.startDate, edu.endDate, locale, globalSettings?.dateFormat)}</ResumeText>
                                 </div>
                             </div>
 
@@ -61,8 +62,8 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                                     className="font-semibold text-slate-500 mt-1 uppercase tracking-wider"
                                     style={{ fontSize: `${(globalSettings?.subheaderSize || 16) - 2}px` }}
                                 >
-                                    {[edu.major, edu.degree].filter(Boolean).join(" · ")}
-                                    {edu.gpa && ` · GPA ${edu.gpa}`}
+                                    {["major", "degree"].filter((key) => edu[key as "major" | "degree"]).map((key, index) => <span key={key}>{index > 0 && " · "}<ResumeText field={`education.${edu.id}.${key}`} role="subtitle">{edu[key as "major" | "degree"]}</ResumeText></span>)}
+                                    {edu.gpa && <ResumeText field={`education.${edu.id}.gpa`} role="subtitle">{` · GPA ${edu.gpa}`}</ResumeText>}
                                 </div>
                             )}
 
@@ -73,14 +74,14 @@ const EducationSection = ({ education, globalSettings, showTitle = true }: Educa
                                         className="absolute left-0 top-1 bottom-1 w-[1.5px] opacity-20 group-hover:opacity-100 transition-opacity"
                                         style={{ backgroundColor: themeColor }}
                                     />
-                                    <div
+                                    <ResumeText field={`education.${edu.id}.description`} role="body"><div
                                         className="text-slate-600 prose prose-sm max-w-none prose-p:my-1 [&>ul]:pl-4 [&>ul]:mt-1 [&>ul>li]:my-0.5 marker:text-slate-400"
                                         dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(edu.description) }}
                                         style={{
                                             fontSize: `${globalSettings?.baseFontSize || 13}px`,
                                             lineHeight: globalSettings?.lineHeight || 1.6
                                         }}
-                                    />
+                                    /></ResumeText>
                                 </motion.div>
                             )}
                         </motion.div>

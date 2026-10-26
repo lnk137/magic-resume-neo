@@ -1,3 +1,4 @@
+import { FieldColor } from "../FieldColor";
 import { useId, useMemo, useState } from "react";
 import { AnimatePresence, motion, Reorder, useDragControls } from "framer-motion";
 import { ArrowDown, ArrowUp, BookOpen, Check, ChevronDown, Eye, EyeOff, GripVertical, Plus, Trash2 } from "lucide-react";
@@ -36,7 +37,7 @@ function PublicationItem({ item, expanded, onToggle, onChange, onDelete, onMove,
 
   const inputField = (field: "title" | "venue" | "link") => (
     <div className="space-y-1.5">
-      <label htmlFor={`${id}-${field}`} className="text-sm font-medium">{t(`labels.${field}`)}</label>
+      <div className="flex items-center justify-between"><label htmlFor={`${id}-${field}`} className="text-sm font-medium">{t(`labels.${field}`)}</label><FieldColor path={`publications.${item.id}.${field}`} label={t(`labels.${field}`)} /></div>
       {field === "title" ? (
         <Textarea id={`${id}-${field}`} value={item[field]} onChange={(event) => onChange({ [field]: event.target.value })}
           placeholder={t(`placeholders.${field}`)} rows={2} className="min-h-[68px] resize-y leading-relaxed" />
@@ -86,7 +87,7 @@ function PublicationItem({ item, expanded, onToggle, onChange, onDelete, onMove,
           <div className="space-y-4 border-t border-border p-4">
           {inputField("title")}
           <div className="space-y-1.5">
-            <label htmlFor={`${id}-authors`} className="text-sm font-medium">{t("labels.authors")}</label>
+            <div className="flex items-center justify-between"><label htmlFor={`${id}-authors`} className="text-sm font-medium">{t("labels.authors")}</label><FieldColor path={`publications.${item.id}.authors`} label={t("labels.authors")} /></div>
             <Textarea
               id={`${id}-authors`}
               value={item.authors}
@@ -150,9 +151,9 @@ function PublicationItem({ item, expanded, onToggle, onChange, onDelete, onMove,
           </div>
           {inputField("venue")}
           <div className="grid grid-cols-2 items-start gap-3">
-            <Field label={t("labels.date")} value={item.date} onChange={(date) => onChange({ date })} type="date" />
+            <Field label={t("labels.date")} colorPath={`publications.${item.id}.date`} value={item.date} onChange={(date) => onChange({ date })} type="date" />
             <div>
-              <label htmlFor={`${id}-status`} className="mb-1.5 block text-sm font-medium">{t("labels.status")}</label>
+              <div className="mb-1.5 flex items-center justify-between"><label htmlFor={`${id}-status`} className="text-sm font-medium">{t("labels.status")}</label><FieldColor path={`publications.${item.id}.status`} label={t("labels.status")} /></div>
               <Select value={item.status || "none"} onValueChange={(value) => onChange({ status: value === "none" ? "" : value as Publication["status"] })}>
                 <SelectTrigger id={`${id}-status`}><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -165,7 +166,7 @@ function PublicationItem({ item, expanded, onToggle, onChange, onDelete, onMove,
           {inputField("link")}
           <details className="group" open={item.description ? true : undefined}>
             <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">{t("labels.description")}</summary>
-            <label htmlFor={`${id}-description`} className="sr-only">{t("labels.description")}</label>
+            <div className="flex items-center justify-between"><label htmlFor={`${id}-description`} className="text-sm font-medium">{t("labels.description")}</label><FieldColor path={`publications.${item.id}.description`} label={t("labels.description")} /></div>
             <Textarea id={`${id}-description`} value={item.description} onChange={(event) => onChange({ description: event.target.value })}
               placeholder={t("placeholders.description")} rows={3} className="mt-3 min-h-[80px] resize-y" />
           </details>

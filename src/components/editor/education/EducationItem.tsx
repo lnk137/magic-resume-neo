@@ -40,12 +40,14 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <Field
             label={t("labels.school")}
+            colorPath={`education.${education.id}.school`}
             value={education.school}
             onChange={(value) => handleChange("school", value)}
             placeholder={t("placeholders.school")}
           />
           <Field
             label={t("labels.major")}
+            colorPath={`education.${education.id}.major`}
             value={education.major}
             onChange={(value) => handleChange("major", value)}
             placeholder={t("placeholders.major")}
@@ -76,6 +78,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <Field
             label={t("labels.degree")}
+            colorPath={`education.${education.id}.degree`}
             value={education.degree}
             onChange={(value) => handleChange("degree", value)}
             placeholder={t("placeholders.degree")}
@@ -83,6 +86,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
 
           <Field
             label={t("labels.gpa")}
+            colorPath={`education.${education.id}.gpa`}
             value={education.gpa || ""}
             onChange={(value) => handleChange("gpa", value)}
             placeholder={t("placeholders.gpa")}
@@ -92,6 +96,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <Field
             label={t("labels.startDate")}
+            colorPath={`education.${education.id}.date`}
             value={education.startDate}
             onChange={(value) => handleChange("startDate", value)}
             type="date"
@@ -99,6 +104,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
           />
           <Field
             label={t("labels.endDate")}
+            colorPath={`education.${education.id}.date`}
             value={education.endDate}
             onChange={(value) => handleChange("endDate", value)}
             type="date"
@@ -109,6 +115,7 @@ const EducationEditor: React.FC<EducationEditorProps> = ({
 
         <Field
           label={t("labels.description")}
+          colorPath={`education.${education.id}.description`}
           value={education.description || ""}
           onChange={(value) => handleChange("description", value)}
           type="editor"

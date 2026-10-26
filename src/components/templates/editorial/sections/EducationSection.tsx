@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -30,23 +31,23 @@ const EducationSection: React.FC<EducationSectionProps> = ({ education, globalSe
 
             <motion.h4 layout="position" className="font-bold text-black flex items-center gap-2" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px`, lineHeight: "1.2" }}>
               <SectionLogo src={edu.logo} config={edu.logoConfig} size={globalSettings?.subheaderSize || 18} />
-              {edu.school}
+              <ResumeText field={`education.${edu.id}.school`} role="title">{edu.school}</ResumeText>
             </motion.h4>
 
             <motion.div layout="position" className="uppercase tracking-[0.1em] text-gray-500 mt-2" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-              {[edu.degree, edu.major].filter(Boolean).join(" in ")}
+              {["degree", "major"].filter((key) => edu[key as "degree" | "major"]).map((key, index) => <span key={key}>{index > 0 && " in "}<ResumeText field={`education.${edu.id}.${key}`} role="subtitle">{edu[key as "degree" | "major"]}</ResumeText></span>)}
               {(edu.degree || edu.major) ? " • " : ""}
-              {formatDateRange(edu.startDate, edu.endDate, locale, globalSettings?.dateFormat)}
-              {edu.gpa && ` • GPA: ${edu.gpa}`}
+              <ResumeText field={`education.${edu.id}.date`} role="date">{formatDateRange(edu.startDate, edu.endDate, locale, globalSettings?.dateFormat)}</ResumeText>
+              {edu.gpa && <ResumeText field={`education.${edu.id}.gpa`} role="subtitle">{` • GPA: ${edu.gpa}`}</ResumeText>}
             </motion.div>
 
             {edu.description && (
-              <motion.div
+              <ResumeText field={`education.${edu.id}.description`} role="body"><motion.div
                 layout="position"
                 className="mt-2 text-gray-800 prose prose-sm max-w-none prose-p:my-1 [&>ul]:pl-4 [&>ul]:mt-0 [&>ul>li]:my-0.5 marker:text-black"
                 style={{ fontSize: `${globalSettings?.baseFontSize || 13}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
                 dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(edu.description) }}
-              />
+              /></ResumeText>
             )}
           </motion.div>
         ))}

@@ -1,3 +1,4 @@
+import { FieldColor } from "../FieldColor";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -37,12 +38,14 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
         <div className="grid gap-4 md:grid-cols-2">
           <Field
             label={t("labels.name")}
+            colorPath={`projects.${project.id}.name`}
             value={project.name}
             onChange={(value) => handleChange("name", value)}
             placeholder={t("placeholders.name")}
           />
           <Field
             label={t("labels.role")}
+            colorPath={`projects.${project.id}.role`}
             value={project.role}
             onChange={(value) => handleChange("role", value)}
             placeholder={t("placeholders.role")}
@@ -51,6 +54,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
         <div className="space-y-2">
           <div className="flex items-center justify-between font-medium">
             <span className="text-sm text-foreground">{t("labels.link")}</span>
+            <FieldColor path={`projects.${project.id}.linkLabel`} label={t("labels.linkLabel")} />
           </div>
           <div className="rounded-lg border border-input bg-background/40 p-3">
             <div className="grid gap-3 md:grid-cols-2">
@@ -84,6 +88,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
         </div>
         <Field
           label={t("labels.date")}
+          colorPath={`projects.${project.id}.date`}
           value={project.date}
           onChange={(value) => handleChange("date", value)}
           type="date-range"
@@ -92,6 +97,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({ project, onSave }) => {
         />
         <Field
           label={t("labels.description")}
+          colorPath={`projects.${project.id}.description`}
           value={project.description}
           onChange={(value) => handleChange("description", value)}
           type="editor"

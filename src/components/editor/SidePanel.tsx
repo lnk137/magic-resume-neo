@@ -1,3 +1,4 @@
+import { TextColors } from "./TextColors";
 import SectionIcon from "@/components/shared/SectionIcon";
 import { useMemo } from "react";
 import { motion } from "framer-motion";
@@ -297,6 +298,7 @@ export function SidePanel({
               </button>
             ))}
           </div>
+          <TextColors />
         </SettingCard>
 
         {/* 排版设置 */}

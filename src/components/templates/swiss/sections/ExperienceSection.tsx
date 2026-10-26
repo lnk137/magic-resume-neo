@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Experience, GlobalSettings } from "@/types/resume";
@@ -35,21 +36,21 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
                                         className="font-extrabold text-slate-800 tracking-tight"
                                         style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}
                                     >
-                                        {exp.company}
+                                        <ResumeText field={`experience.${exp.id}.company`} role="title">{exp.company}</ResumeText>
                                     </h4>
                                     {centerSubtitle && (
                                         <span
                                             className="font-medium text-slate-500 border-l border-slate-300 pl-3 text-[14px]"
                                             style={{ fontSize: `${(globalSettings?.subheaderSize || 16) - 1}px` }}
                                         >
-                                            {exp.position}
+                                            <ResumeText field={`experience.${exp.id}.position`} role="subtitle">{exp.position}</ResumeText>
                                         </span>
                                     )}
                                 </div>
                                 <div
                                     className="ml-auto self-center font-mono text-slate-400 bg-slate-50 border border-slate-100/80 px-2 py-0.5 rounded text-[11px] font-semibold shrink-0"
                                 >
-                                    {formatDateString(exp.date, locale, globalSettings?.dateFormat)}
+                                    <ResumeText field={`experience.${exp.id}.date`} role="date">{formatDateString(exp.date, locale, globalSettings?.dateFormat)}</ResumeText>
                                 </div>
                             </div>
 
@@ -59,7 +60,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
                                     className="font-semibold text-slate-500 mt-1 uppercase tracking-wider"
                                     style={{ fontSize: `${(globalSettings?.subheaderSize || 16) - 2}px` }}
                                 >
-                                    {exp.position}
+                                    <ResumeText field={`experience.${exp.id}.position`} role="subtitle">{exp.position}</ResumeText>
                                 </div>
                             )}
 
@@ -70,14 +71,14 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
                                         className="absolute left-0 top-1 bottom-1 w-[1.5px] opacity-20 group-hover:opacity-100 transition-opacity"
                                         style={{ backgroundColor: themeColor }}
                                     />
-                                    <div
+                                    <ResumeText field={`experience.${exp.id}.details`} role="body"><div
                                         className="text-slate-600 prose prose-sm max-w-none prose-p:my-1 [&>ul]:pl-4 [&>ul]:mt-1 [&>ul>li]:my-0.5 marker:text-slate-400"
                                         dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(exp.details) }}
                                         style={{
                                             fontSize: `${globalSettings?.baseFontSize || 13}px`,
                                             lineHeight: globalSettings?.lineHeight || 1.6
                                         }}
-                                    />
+                                    /></ResumeText>
                                 </motion.div>
                             )}
                         </motion.div>

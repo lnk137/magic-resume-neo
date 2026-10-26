@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import React from "react";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
@@ -114,7 +115,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                                 className="font-black tracking-tight whitespace-normal break-normal [overflow-wrap:normal] leading-none text-slate-800" 
                                 style={{ fontSize: "38px" }}
                             >
-                                {basic[nameField.key] as string}
+                                <ResumeText field={`basic.${nameField.key}`} role="name">{basic[nameField.key] as string}</ResumeText>
                             </motion.h1>
                         )}
                         {titleField.visible !== false && basic[titleField.key] && (
@@ -122,7 +123,7 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                                 layout="position" 
                                 className="whitespace-normal break-normal [overflow-wrap:normal] font-bold tracking-widest mt-2.5 text-slate-400 uppercase text-[12px]"
                             >
-                                {basic[titleField.key] as string}
+                                <ResumeText field={`basic.${titleField.key}`} role="subtitle">{basic[titleField.key] as string}</ResumeText>
                             </motion.h2>
                         )}
                     </div>
@@ -152,12 +153,12 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                                 <div className="flex items-center gap-1.5 min-w-0 leading-tight">
                                     {!useIconMode && !item.custom && (
                                         <span className="shrink-0 font-extrabold text-[12px] text-slate-400 uppercase tracking-wider">
-                                            {t(`basicPanel.basicFields.${item.key}`)}
+                                            <ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{t(`basicPanel.basicFields.${item.key}`)}</ResumeText>
                                         </span>
                                     )}
                                     {!useIconMode && item.custom && shouldShowCustomFieldLabelPrefix(item) && (
                                         <span className="shrink-0 font-extrabold text-[12px] text-slate-400 uppercase tracking-wider">
-                                            {item.label}
+                                            <ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.label}</ResumeText>
                                         </span>
                                     )}
                                     
@@ -169,18 +170,18 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                                             rel="noopener noreferrer" 
                                             className="font-medium text-slate-600 hover:text-slate-900 underline truncate break-all [overflow-wrap:anywhere]"
                                         >
-                                            {item.value}
+                                            <ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText>
                                         </a>
                                     ) : item.key === "email" ? (
                                         <a 
                                             href={`mailto:${item.value}`} 
                                             className="font-medium text-slate-600 hover:text-slate-900 underline truncate break-all [overflow-wrap:anywhere]"
                                         >
-                                            {item.value}
+                                            <ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText>
                                         </a>
                                     ) : (
                                         <span className="font-medium text-slate-600 break-all [overflow-wrap:anywhere]">
-                                            {item.value}
+                                            <ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText>
                                         </span>
                                     )}
                                 </div>

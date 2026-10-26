@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -32,24 +33,24 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ experiences, glob
             {/* Title: Company as Priority */}
             <motion.h4 layout="position" className="font-bold text-black flex items-center gap-2" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px`, lineHeight: "1.2" }}>
               <SectionLogo src={exp.logo} config={exp.logoConfig} size={globalSettings?.subheaderSize || 18} />
-              {exp.company}
+              <ResumeText field={`experience.${exp.id}.company`} role="title">{exp.company}</ResumeText>
             </motion.h4>
 
             {/* Position & Date */}
             <motion.div layout="position" className="uppercase tracking-[0.1em] text-gray-500 mt-2" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-              {exp.position ? <span className="font-semibold text-black">{exp.position}</span> : null}
+              {exp.position ? <span className="font-semibold text-black"><ResumeText field={`experience.${exp.id}.position`} role="subtitle">{exp.position}</ResumeText></span> : null}
               {exp.position && " • "}
-              {formatDateString(exp.date, locale, globalSettings?.dateFormat)}
+              <ResumeText field={`experience.${exp.id}.date`} role="date">{formatDateString(exp.date, locale, globalSettings?.dateFormat)}</ResumeText>
             </motion.div>
 
             {/* Details */}
             {exp.details && (
-              <motion.div
+              <ResumeText field={`experience.${exp.id}.details`} role="body"><motion.div
                 layout="position"
                 className="mt-2 text-gray-800 prose prose-sm max-w-none prose-p:my-1 [&>ul]:pl-4 [&>ul]:mt-2 [&>ul]:mb-0 [&>ul>li]:my-0.5 marker:text-black"
                 dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(exp.details) }}
                 style={{ fontSize: `${globalSettings?.baseFontSize || 13}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
-              />
+              /></ResumeText>
             )}
           </motion.div>
         ))}

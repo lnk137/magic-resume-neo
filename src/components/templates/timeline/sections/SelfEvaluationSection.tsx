@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import { motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
@@ -15,10 +16,10 @@ const SelfEvaluationSection = ({ content, globalSettings, showTitle = true }: Se
         <SectionWrapper sectionId="selfEvaluation" style={{ marginTop: `${globalSettings?.sectionSpacing || 24}px` }}>
             <SectionTitle type="selfEvaluation" globalSettings={globalSettings} showTitle={showTitle} />
             <motion.div style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
-                <motion.div className="text-baseFont" layout="position"
+                <ResumeText field="selfEvaluationContent" role="body"><motion.div className="text-baseFont" layout="position"
                     style={{ fontSize: `${globalSettings?.baseFontSize || 14}px`, lineHeight: globalSettings?.lineHeight || 1.6 }}
                     dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(content) }}
-                />
+                /></ResumeText>
             </motion.div>
         </SectionWrapper>
     );

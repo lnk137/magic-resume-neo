@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import { useMemo } from "react";
 import { GlobalSettings } from "@/types/resume";
 import { useTemplateContext } from "../../TemplateContext";
@@ -31,7 +32,7 @@ const SectionTitle = ({ type, title, globalSettings, showTitle = true }: Section
                 fontSize: `${globalSettings?.headerSize || 20}px`,
             }}
         >
-            {renderTitle}
+            <ResumeText role="section">{renderTitle}</ResumeText>
         </div>
     );
 };

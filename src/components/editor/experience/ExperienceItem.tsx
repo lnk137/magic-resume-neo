@@ -41,12 +41,14 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <Field
             label={t("labels.company")}
+            colorPath={`experience.${experience.id}.company`}
             value={experience.company}
             onChange={(value) => handleChange("company", value)}
             placeholder={t("placeholders.company")}
           />
           <Field
             label={t("labels.position")}
+            colorPath={`experience.${experience.id}.position`}
             value={experience.position}
             onChange={(value) => handleChange("position", value)}
             placeholder={t("placeholders.position")}
@@ -73,6 +75,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
         </div>
         <Field
           label={t("labels.date")}
+          colorPath={`experience.${experience.id}.date`}
           value={experience.date}
           onChange={(value) => handleChange("date", value)}
           type="date-range"
@@ -81,6 +84,7 @@ const ProjectEditor: React.FC<ProjectEditorProps> = ({
         />
         <Field
           label={t("labels.details")}
+          colorPath={`experience.${experience.id}.details`}
           value={experience.details}
           onChange={(value) => handleChange("details", value)}
           type="editor"

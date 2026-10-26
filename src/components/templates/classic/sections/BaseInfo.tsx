@@ -1,3 +1,4 @@
+import ResumeText from "@/components/templates/shared/ResumeText";
 import React from "react";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
@@ -77,10 +78,10 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                     {PhotoComponent}
                     <div className={cn("flex flex-col", styles.nameTitle)}>
                         {nameField.visible !== false && basic[nameField.key] && (
-                            <motion.h1 layout="position" className="font-bold whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "30px" }}>{basic[nameField.key] as string}</motion.h1>
+                            <motion.h1 layout="position" className="font-bold whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "30px" }}><ResumeText field={`basic.${nameField.key}`} role="name">{basic[nameField.key] as string}</ResumeText></motion.h1>
                         )}
                         {titleField.visible !== false && basic[titleField.key] && (
-                            <motion.h2 layout="position" className="whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "18px" }}>{basic[titleField.key] as string}</motion.h2>
+                            <motion.h2 layout="position" className="whitespace-normal break-normal [overflow-wrap:normal]" style={{ fontSize: "18px" }}><ResumeText field={`basic.${titleField.key}`} role="subtitle">{basic[titleField.key] as string}</ResumeText></motion.h2>
                         )}
                     </div>
                 </div>
@@ -93,13 +94,13 @@ const BaseInfo = ({ basic = {} as BasicInfo, globalSettings, template }: BaseInf
                             {useIconMode ? (
                                 <div className="flex min-w-0 items-start gap-1">
                                     {getIcon(item.icon)}
-                                    {item.key === "email" ? <a href={`mailto:${item.value}`} className="min-w-0 underline [overflow-wrap:anywhere]">{item.value}</a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]">{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]">{item.value}</span>}
+                                    {item.key === "email" ? <a href={`mailto:${item.value}`} className="min-w-0 underline [overflow-wrap:anywhere]"><ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText></a> : customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]"><ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText></a> : <span className="min-w-0 [overflow-wrap:anywhere]"><ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText></span>}
                                 </div>
                             ) : (
                                 <div className="flex min-w-0 items-start gap-2">
-                                    {!item.custom && <span className="shrink-0">{t(`basicPanel.basicFields.${item.key}`)}:</span>}
-                                    {item.custom && shouldShowCustomFieldLabelPrefix(item) && <span className="shrink-0">{item.label}:</span>}
-                                    {customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</a> : <span className="min-w-0 [overflow-wrap:anywhere]" suppressHydrationWarning>{item.value}</span>}
+                                    {!item.custom && <span className="shrink-0"><ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{t(`basicPanel.basicFields.${item.key}`)}</ResumeText>:</span>}
+                                    {item.custom && shouldShowCustomFieldLabelPrefix(item) && <span className="shrink-0"><ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.label}</ResumeText>:</span>}
+                                    {customFieldHref ? <a href={customFieldHref} target="_blank" rel="noopener noreferrer" className="min-w-0 underline [overflow-wrap:anywhere]" suppressHydrationWarning><ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText></a> : <span className="min-w-0 [overflow-wrap:anywhere]" suppressHydrationWarning><ResumeText field={`basic.${item.custom ? `customFields.${item.key}` : item.key}`} role="body">{item.value}</ResumeText></span>}
                                 </div>
                             )}
                         </motion.div>
