@@ -1,21 +1,15 @@
-import SectionIcon from "@/components/shared/SectionIcon";
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FileText, Palette, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useResumeStore } from "@/store/useResumeStore";
 import { EditPanel } from "@/components/editor/EditPanel";
 import { SidePanel } from "@/components/editor/SidePanel";
 import PreviewPanel from "@/components/preview";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 type TabType = "content" | "style" | "preview";
 
 export function MobileWorkbench() {
   const [activeTab, setActiveTab] = useState<TabType>("content");
-  const { activeResume, setActiveSection } = useResumeStore();
-  const { activeSection, menuSections } = activeResume || {};
 
   // 渲染底部导航项
   const renderNavItem = (tab: TabType, icon: React.ReactNode, label: string) => (
@@ -55,48 +49,7 @@ export function MobileWorkbench() {
               transition={{ duration: 0.2 }}
               className="h-full flex flex-col"
             >
-              {/* 顶部模块选择器 */}
-              <div className="border-b bg-background/95 backdrop-blur z-10">
-                <ScrollArea className="w-full whitespace-nowrap">
-                  <div className="flex p-2 space-x-2">
-                    {/* 基础信息 */}
-                    <button
-                      onClick={() => setActiveSection("basic")}
-                      className={cn(
-                        "inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors border",
-                        activeSection === "basic"
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-background text-muted-foreground border-border hover:bg-muted"
-                      )}
-                    >
-                      <span className="mr-1.5">👤</span>
-                      基本信息
-                    </button>
-                    
-                    {/* 其他模块 */}
-                    {menuSections
-                      ?.filter((s) => s.id !== "basic" && s.enabled)
-                      .map((section) => (
-                        <button
-                          key={section.id}
-                          onClick={() => setActiveSection(section.id)}
-                          className={cn(
-                            "inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors border",
-                            activeSection === section.id
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "bg-background text-muted-foreground border-border hover:bg-muted"
-                          )}
-                        >
-                          <span className="mr-1.5"><SectionIcon icon={section.icon} /></span>
-                          {section.title}
-                        </button>
-                      ))}
-                  </div>
-                  <ScrollBar orientation="horizontal" className="invisible" />
-                </ScrollArea>
-              </div>
-              
-              {/* 编辑区域 */}
+              {/* Module navigation is pinned inside EditPanel. */}
               <div className="flex-1 overflow-hidden">
                 <EditPanel />
               </div>
