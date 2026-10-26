@@ -7,3 +7,5 @@ The add menu offers missing template modules and unlimited custom modules. Creat
 Custom entries expose **字段与排版** on expansion. Each field can have its editor label renamed or be hidden from the resume without deleting its contents; body alignment is configurable. Visibility and alignment apply across all nine templates and their exports. Use the copy icon to duplicate an entry, including its content and formatting, with an independent ID.
 
 **复制模块** creates a new custom module with independent entry IDs, field settings and colors, and selects it immediately. Entry and module copies preserve their content without sharing mutable data.
+
+Validation: `node --test tests/custom-items.test.ts` checks storage preservation and independent formatting copies. With the development server running on port 3211, `node --test tests/neo-editor.browser.mjs` exercises creation, field customization, copying and desktop/mobile navigation in isolated browser storage. Override `TEST_BASE_URL` or `PLAYWRIGHT_EXECUTABLE_PATH` when needed.
