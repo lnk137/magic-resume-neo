@@ -1015,3 +1015,16 @@ export const useResumeStore = create(
     }
   )
 );
+
+/** Restore an MCP transaction and cancel file writes scheduled by the superseded edit. */
+export function restoreMcpStoreSnapshot(snapshot: Pick<ReturnType<typeof useResumeStore.getState>, 'resumes' | 'activeResumeId' | 'history' | 'future'>) {
+  const current = useResumeStore.getState();
+  for (const id of Object.keys(current.resumes)) if (!snapshot.resumes[id]) clearPendingSync(id);
+  useResumeStore.setState({
+    ...snapshot,
+    activeResume: snapshot.activeResumeId ? snapshot.resumes[snapshot.activeResumeId] ?? null : null,
+  });
+  for (const [id, resume] of Object.entries(snapshot.resumes)) {
+    if (resume !== current.resumes[id]) debouncedSyncToFile(resume, current.resumes[id]);
+  }
+}
