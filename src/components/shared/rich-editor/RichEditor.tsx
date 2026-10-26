@@ -1,3 +1,4 @@
+import { ColorPicker } from "@/components/ui/color-picker";
 import React, { useEffect, useMemo } from "react";
 import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import { useTranslations } from "@/i18n/compat/client";
@@ -146,7 +147,6 @@ const MenuButton = ({
 const TextColorButton = ({ editor }: { editor: Editor }) => {
   const [activeColor, setActiveColor] = React.useState<string | null>(null);
   const t = useTranslations("richEditor");
-  const colors = getColors(t);
 
   React.useEffect(() => {
     const syncActiveColor = () => {
@@ -164,70 +164,7 @@ const TextColorButton = ({ editor }: { editor: Editor }) => {
     };
   }, [editor]);
 
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-9 w-9 p-0 rounded-md hover:scale-105 transition-all duration-200 hover:bg-primary/5 relative group"
-        >
-          <PaintBucket
-            className="h-5 w-5"
-            style={{
-              color: activeColor || "currentColor",
-              filter: activeColor
-                ? "drop-shadow(0 1px 1px rgba(0,0,0,0.1))"
-                : "none",
-            }}
-          />
-          <span className="sr-only">{t("textColor")}</span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-64 p-3 rounded-lg">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <PaintBucket className="h-4 w-4" />
-            <span className="text-sm font-medium">{t("textColor")}</span>
-          </div>
-          <div className="grid grid-cols-5 gap-1">
-            <button
-              className="h-8 w-8 rounded-md border border-border flex items-center justify-center hover:bg-muted"
-              onClick={() => {
-                editor.chain().focus().unsetColor().run();
-                setActiveColor(null);
-              }}
-            >
-              <span className="text-xl leading-none text-muted-foreground">
-                /
-              </span>
-            </button>
-            {colors.map((color: ColorOption) => (
-              <button
-                key={color.value}
-                className={`h-8 w-8 rounded-md border hover:scale-110 transition-transform relative
-                  ${
-                    activeColor === color.value
-                      ? "ring-2 ring-primary ring-offset-2"
-                      : ""
-                  }`}
-                style={{
-                  backgroundColor: color.value,
-                  borderColor:
-                    color.value === "#FFFFFF" ? "#E2E8F0" : color.value,
-                }}
-                onClick={() => {
-                  editor.chain().focus().setColor(color.value).run();
-                  setActiveColor(color.value);
-                }}
-                title={color.label}
-              />
-            ))}
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
+  return <ColorPicker value={activeColor || "#18181B"} aria-label={t("textColor")} title={t("textColor")} variant="ghost" size="sm" className="h-9 w-9 rounded-md border-0 p-0" style={{ backgroundColor: "transparent" }} onChange={(color) => { editor.chain().focus().setColor(color).run(); setActiveColor(color); }} onReset={() => { editor.chain().focus().unsetColor().run(); setActiveColor(null); }}><PaintBucket className="h-5 w-5" style={{ color: activeColor || "currentColor" }} /></ColorPicker>;
 };
 
 const BackgroundColorButton = ({ editor }: { editor: Editor }) => {
