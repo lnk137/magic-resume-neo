@@ -1,3 +1,4 @@
+import { visibleCustomItems, isCustomFieldBold } from "@/lib/customItems";
 import TurndownService from "turndown";
 import { DEFAULT_FIELD_ORDER } from "@/config";
 import { getCustomFieldDisplayText, getCustomFieldHref, shouldShowCustomFieldLabelPrefix } from "@/lib/customField";
@@ -315,32 +316,15 @@ const renderPublicationsSection = (title: string, resume: ResumeData, dateContex
   return blocks.length ? `## ${title}\n\n${blocks.join("\n\n")}` : "";
 };
 
-const renderCustomSection = (title: string, items: CustomItem[], dateContext: MarkdownDateContext) => {
-  const blocks = items
-    .filter((item) => item.visible)
-    .map((item, index) => {
-      const heading =
-        normalizeText(item.title) ||
-        normalizeText(item.subtitle) ||
-        `Item ${index + 1}`;
-      const subtitle = normalizeText(item.subtitle);
-      const dateRange = applyDateFormat(normalizeDateRangeText(item.dateRange), dateContext);
-      const details = markdownFromText(item.description);
-      const metadata = [subtitle !== heading ? subtitle : "", dateRange]
-        .filter(Boolean)
-        .join(" | ");
-      const lines: string[] = [];
-
-      if (heading) lines.push(`### ${heading}`);
-      if (metadata) lines.push(`_${metadata}_`);
-      if (details) lines.push(details);
-
-      return lines.join("\n\n");
-    })
-    .filter(Boolean);
-
-  if (blocks.length === 0) return "";
-  return `## ${title}\n\n${blocks.join("\n\n")}`;
+const renderCustomSection = (title: string, items: CustomItem[]) => {
+  const blocks = visibleCustomItems(items).map((item) => {
+    const header = (["title", "subtitle", "dateRange"] as const).map((field) => {
+      const content = escapeMarkdownText(normalizeText(item[field]));
+      return content && isCustomFieldBold(item, field) ? `**${content}**` : content;
+    }).filter(Boolean).join(" | ");
+    return [header, markdownFromText(item.description)].filter(Boolean).join("\n\n");
+  }).filter(Boolean);
+  return blocks.length ? `## ${title}\n\n${blocks.join("\n\n")}` : "";
 };
 
 export const generateResumeMarkdown = (
@@ -383,7 +367,7 @@ export const generateResumeMarkdown = (
         break;
       default: {
         const customItems = resume.customData?.[section.id] || [];
-        content = renderCustomSection(sectionTitle, customItems, dateContext);
+        content = renderCustomSection(sectionTitle, customItems);
         break;
       }
     }

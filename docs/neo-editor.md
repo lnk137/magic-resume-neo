@@ -13,3 +13,5 @@ Validation: `node --test tests/custom-items.test.ts` checks storage preservation
 Custom module headers use three independent free-text slots: **内容－左 / 内容－中 / 内容－右**. The right slot accepts any text and is rendered verbatim, without date parsing. The middle slot stays centered on the same row regardless of the global subtitle setting. Existing `title`, `subtitle`, `dateRange` keys, colors, labels and contents remain compatible. Long content wraps within its slot.
 
 Each free-text slot has an independent **B** button for bold. Left content defaults to bold for compatibility; center/right default to regular. Explicit settings persist in `fieldBold` keyed by the stable `title` / `subtitle` / `dateRange` identifiers, and survive copy, undo, reload, JSON export/import and MCP edits. Rich description text continues to use the rich-text toolbar.
+
+Markdown export also treats the right slot as plain text and preserves slot bold/hidden settings. It joins the visible slots with separators rather than applying date formatting; PDF/print use the shared three-column render tree.
