@@ -45,3 +45,5 @@ import it in the local dashboard. Keep the JSON backup until the import is verif
 AI model/provider settings are configured in the local app. They are not copied
 from the hosted site and are not stored in Git. MCP uses a separate local connection;
 see [MCP integration](mcp.md).
+
+Custom entry layout modes are stored in each resume in browser storage. Updating the local service does not migrate browser data; unmarked entries use original layout and can be switched to free layout in the editor.

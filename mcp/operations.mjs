@@ -64,6 +64,7 @@ export function validateResume(resume) {
   for (const entry of resume.certificates) { checkFields(entry,['url']); if(typeof entry.width !== 'number' || entry.width < 1 || entry.width > 100) throw new Error('Certificate width must be 1–100'); }
   for (const entries of Object.values(resume.customData)) for (const entry of entries) {
     checkFields(entry,['title','subtitle','dateRange','description']);
+    if (entry.layoutMode !== undefined && !['original','free'].includes(entry.layoutMode)) throw new Error('Invalid layoutMode');
     if (entry.hiddenFields !== undefined && (!Array.isArray(entry.hiddenFields) || entry.hiddenFields.some(f=>!['title','subtitle','dateRange','description'].includes(f)))) throw new Error('Invalid hiddenFields');
     if (entry.fieldBold !== undefined) for (const [field, bold] of Object.entries(object(entry.fieldBold))) { if (!['title','subtitle','dateRange'].includes(field) || typeof bold !== 'boolean') throw new Error('Invalid fieldBold'); }
     if (entry.fieldLabels !== undefined) for(const [field,label] of Object.entries(object(entry.fieldLabels))) { if(!['title','subtitle','dateRange','description'].includes(field)) throw new Error('Invalid field label'); text(label,'field label'); }
@@ -166,7 +167,7 @@ export function applyOperation(resumes, action, args, blank, templateIds = []) {
         const reordered = reorder(entries, args.ids); if (custom) target.customData[sectionId] = reordered; else target[sectionId] = reordered;
       } else if (action === 'item_create') {
         object(args.data);
-        const defaults = custom ? { title:'',subtitle:'',dateRange:'',description:'',visible:true } : sectionId === 'education' ? {school:'',major:'',degree:'',startDate:'',endDate:'',visible:true} : sectionId === 'experience' ? {company:'',position:'',date:'',details:'',visible:true} : sectionId === 'projects' ? {name:'',role:'',date:'',description:'',visible:true} : sectionId === 'publications' ? {title:'',authors:'',highlightedAuthor:'',venue:'',date:'',status:'',link:'',description:'',visible:true} : {url:'',width:100};
+        const defaults = custom ? { title:'',subtitle:'',dateRange:'',description:'',visible:true,layoutMode:'free' } : sectionId === 'education' ? {school:'',major:'',degree:'',startDate:'',endDate:'',visible:true} : sectionId === 'experience' ? {company:'',position:'',date:'',details:'',visible:true} : sectionId === 'projects' ? {name:'',role:'',date:'',description:'',visible:true} : sectionId === 'publications' ? {title:'',authors:'',highlightedAuthor:'',venue:'',date:'',status:'',link:'',description:'',visible:true} : {url:'',width:100};
         entries.push({ ...defaults, ...args.data, id:itemId }); resultId = itemId;
       } else {
         if (index < 0) throw new Error('Item not found');

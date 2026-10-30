@@ -21,8 +21,8 @@ test('free content slots preserve text, alignment and independent bold in all te
       menuSections:[...r.menuSections,{id:'custom-content',title:'比赛经历',icon:'➕',enabled:true,order:r.menuSections.length}],
       activeSection:'custom-content',
       customData:{'custom-content':[
-        {id:'entry',title:'超级大赛',subtitle:'项目负责人',dateRange:'省级一等奖',description:'<p>独立完成项目设计与开发。</p>',visible:true},
-        {id:'legacy',title:'旧记录',subtitle:'',dateRange:'2026/02 - 2027/05',description:'',visible:true},
+        {id:'entry',layoutMode:'free',title:'超级大赛',subtitle:'项目负责人',dateRange:'省级一等奖',description:'<p>独立完成项目设计与开发。</p>',visible:true},
+        {id:'legacy',title:'旧记录',subtitle:'旧副标题',dateRange:'2026/02 - 2027/05',description:'',visible:true},
       ]},
       globalSettings:{...r.globalSettings,centerSubtitle:false,dateFormat:'short-month',fieldColors:{'customData.custom-content.entry.dateRange':'#3730A3'}},
     });
@@ -36,6 +36,7 @@ test('free content slots preserve text, alignment and independent bold in all te
   await page.getByRole('button',{name:'内容－左加粗',exact:true}).click();
   await page.getByRole('button',{name:'内容－中加粗',exact:true}).click();
   await page.getByRole('button',{name:'内容－右加粗',exact:true}).click();
+  await mkdir('node_modules/.cache/custom-content',{recursive:true});
   for(const templateId of templates) {
     await page.evaluate(async templateId=>{const {useResumeStore}=await import('/src/store/useResumeStore.ts');const s=useResumeStore.getState();s.updateResume(s.activeResumeId,{templateId});},templateId);
     const header=page.locator('#resume-preview [data-custom-header="entry"]');
@@ -43,15 +44,23 @@ test('free content slots preserve text, alignment and independent bold in all te
     const result=await header.evaluate(el=>({
       columns:[...el.children].map(node=>({text:node.textContent,align:getComputedStyle(node).textAlign,weight:getComputedStyle(node).fontWeight,rect:node.getBoundingClientRect().toJSON()})),
       color:getComputedStyle(el.children[2].firstElementChild).color,
-      legacy:document.querySelector('#resume-preview [data-custom-header="legacy"] [data-custom-column="right"]').textContent,
+      legacy:document.querySelector('#resume-preview [data-custom-legacy-header="legacy"]').textContent,
     }));
     assert.deepEqual(result.columns.map(c=>c.text),['超级大赛','项目负责人','省级一等奖 · 个人项目'],templateId);
     assert.deepEqual(result.columns.map(c=>c.align),['left','center','right']);
     assert.deepEqual(result.columns.map(c=>c.weight),['400','700','700']);
     assert.equal(result.color,'rgb(55, 48, 163)');
-    assert.equal(result.legacy,'2026/02 - 2027/05');
+    assert.ok(result.legacy.includes('2026/02 - 2027/05'));
+    assert.ok(result.legacy.includes('旧副标题'));
+    const legacyHeader=page.locator('#resume-preview [data-custom-legacy-header="legacy"]');
+    assert.equal(await legacyHeader.locator('[data-resume-field$=".subtitle"]').count(),1);
+    await page.locator('#resume-preview').screenshot({path: 'node_modules/.cache/custom-content/' + templateId + '.png'});
     assert.ok(result.columns[0].rect.right<result.columns[1].rect.x && result.columns[1].rect.right<result.columns[2].rect.x);
   }
+  await page.getByRole('button',{name:'原版布局',exact:true}).click();
+  assert.equal(await page.locator('#resume-preview [data-custom-legacy-header="entry"]').count(),1);
+  await page.getByRole('button',{name:'自由三列',exact:true}).click();
+  assert.equal(await page.locator('#resume-preview [data-custom-header="entry"]').count(),1);
   // Persisted JSON and the export DOM keep free text and explicit emphasis.
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('resume-storage')).state.resumes);
   assert.deepEqual(saved[id].customData['custom-content'][0].fieldBold,{title:false,subtitle:true,dateRange:true});

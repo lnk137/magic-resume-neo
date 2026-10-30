@@ -36,6 +36,14 @@ const CustomItemEditor = ({
   const label = (field: CustomField) => item.fieldLabels?.[field] || fields.find((entry) => entry.key === field)!.label;
   return (
     <div className="space-y-5">
+      <div className="flex items-center justify-between gap-3">
+        <span className="text-sm font-medium">头部布局</span>
+        <div className="flex rounded-md bg-muted p-1" role="group" aria-label="头部布局">
+          {([{ value: "original", label: "原版布局" }, { value: "free", label: "自由三列" }] as const).map(({ value, label }) => (
+            <Button key={value} type="button" size="sm" variant={(item.layoutMode ?? "original") === value ? "secondary" : "ghost"} aria-pressed={(item.layoutMode ?? "original") === value} onClick={() => onSave({ ...item, layoutMode: value })}>{label}</Button>
+          ))}
+        </div>
+      </div>
       <details className="rounded-md border border-border">
         <summary className="cursor-pointer px-3 py-2 text-sm font-medium">字段与排版</summary>
         <div className="space-y-3 border-t border-border p-3">

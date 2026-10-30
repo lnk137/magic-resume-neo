@@ -24,7 +24,21 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
       <AnimatePresence mode="popLayout">
         {visibleItems.map((item) => (
           <motion.div key={item.id} layout="position" className="relative pb-6 last:pb-0" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
-                            <CustomItemHeader item={item} sectionId={sectionId} globalSettings={globalSettings} />
+                            {item.layoutMode === "free" ? <CustomItemHeader item={item} sectionId={sectionId} globalSettings={globalSettings} /> : <div data-custom-legacy-header={item.id}>
+            <motion.div layout="position" className="flex items-center gap-2">
+              <div className="flex-[1.5]">
+                {item.title && (<h4 className="font-bold text-black" style={{ fontSize: `${globalSettings?.subheaderSize || 18}px` }}>{<ResumeText field={`customData.${sectionId}.${item.id}.title`} role="title"><span style={{ fontWeight: (item.fieldBold?.title ?? true) ? 700 : 400 }}>{item.title}</span></ResumeText>}</h4>)}
+              </div>
+              {item.subtitle && (
+                <motion.div layout="position" className="flex-1 text-gray-500" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                  {<ResumeText field={`customData.${sectionId}.${item.id}.subtitle`} role="subtitle"><span style={{ fontWeight: (item.fieldBold?.subtitle ?? false) ? 700 : 400 }}>{item.subtitle}</span></ResumeText>}
+                </motion.div>
+              )}
+              {item.dateRange && (<span className="flex-1 text-right text-gray-500 shrink-0" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                    <ResumeText field={`customData.${sectionId}.${item.id}.dateRange`} role="date"><span style={{ fontWeight: (item.fieldBold?.dateRange ?? false) ? 700 : 400 }}>{item.dateRange}</span></ResumeText>
+                                </span>)}
+            </motion.div>
+                            </div>}
                             {item.description && (
               <ResumeText field={`customData.${sectionId}.${item.id}.description`} role="body">
               <motion.div

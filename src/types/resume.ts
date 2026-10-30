@@ -204,6 +204,8 @@ export interface ResumeTheme {
 export type CustomField = "title" | "subtitle" | "dateRange" | "description";
 
 export interface CustomItem {
+  /** Missing mode preserves the template layout for existing entries. */
+  layoutMode?: "original" | "free";
   hiddenFields?: CustomField[];
   fieldLabels?: Partial<Record<CustomField, string>>;
   /** Independent emphasis for the left, center and right free-text slots. */

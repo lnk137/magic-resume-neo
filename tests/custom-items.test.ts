@@ -42,11 +42,12 @@ test("cloning entries gives independent IDs, nested settings and color overrides
   const item = {id:"free",title:"Left",subtitle:"Middle",dateRange:"Award · Any text",description:"",visible:true};
   assert.equal(isCustomFieldBold(item,"title"),true);
   assert.equal(isCustomFieldBold(item,"dateRange"),false);
-  const styled = {...item,fieldBold:{title:false,subtitle:true,dateRange:true}};
+  const styled = {...item,layoutMode:"free" as const,fieldBold:{title:false,subtitle:true,dateRange:true}};
   const [rendered] = visibleCustomItems([styled]);
   assert.equal(rendered.dateRange,item.dateRange);
   assert.equal(isCustomFieldBold(rendered,"title"),false);
   const {items:[copy]} = cloneCustomItems([styled],"source","target");
+  assert.equal(copy.layoutMode,"free");
   copy.fieldBold!.subtitle=false;
   assert.equal(styled.fieldBold.subtitle,true);
 });

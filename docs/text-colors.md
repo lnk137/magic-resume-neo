@@ -28,7 +28,7 @@ Field overrides use stable IDs rather than array positions:
 | Custom entry | `customData.<sectionId>.<id>.title`, `.subtitle`, `.dateRange`, `.description` |
 | Single rich-text sections | `skillContent`, `selfEvaluationContent` |
 
-Education dates share the rendered date-range color. Rich-text HTML retains selected-word colors. Module duplication remaps custom-entry and heading override IDs.
+Education dates share the rendered date-range color. Rich-text HTML retains selected-word colors. Module duplication remaps custom-entry and heading override IDs. Switching a custom entry between original and free layouts retains its field color paths.
 
 All nine templates use the same `ResumeText` resolver. PDF/image/print export clones the styled resume DOM; JSON export/import retains the optional color maps. Normal resume history and local persistence apply to color edits.
 

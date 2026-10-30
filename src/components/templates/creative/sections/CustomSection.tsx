@@ -17,6 +17,8 @@ interface CustomSectionProps {
 
 const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = true }: CustomSectionProps) => {
     const visibleItems = visibleCustomItems(items);
+    const centerSubtitle = globalSettings?.centerSubtitle;
+    const flexLayout = globalSettings?.flexibleHeaderLayout;
 
     return (
         <SectionWrapper sectionId={sectionId} style={{ marginTop: `${globalSettings?.sectionSpacing || 24}px` }}>
@@ -24,7 +26,24 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
             <AnimatePresence mode="popLayout">
                 {visibleItems.map((item) => (
                     <motion.div key={item.id} layout="position" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
-                            <CustomItemHeader item={item} sectionId={sectionId} globalSettings={globalSettings} />
+                            {item.layoutMode === "free" ? <CustomItemHeader item={item} sectionId={sectionId} globalSettings={globalSettings} /> : <div data-custom-legacy-header={item.id}>
+                        <motion.div layout="position" className="flex items-center gap-2">
+                            <div className={`flex items-center gap-2 ${flexLayout ? "" : "flex-[1.5]"}`}>
+                                {item.title && (<h4 className="font-bold" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{<ResumeText field={`customData.${sectionId}.${item.id}.title`} role="title"><span style={{ fontWeight: (item.fieldBold?.title ?? true) ? 700 : 400 }}>{item.title}</span></ResumeText>}</h4>)}
+                            </div>
+                            {centerSubtitle && item.subtitle && (
+                                <motion.div layout="position" className={`text-subtitleFont ${flexLayout ? "ml-[16px]" : "flex-1"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                    {<ResumeText field={`customData.${sectionId}.${item.id}.subtitle`} role="subtitle"><span style={{ fontWeight: (item.fieldBold?.subtitle ?? false) ? 700 : 400 }}>{item.subtitle}</span></ResumeText>}
+                                </motion.div>
+                            )}
+                            {item.dateRange && (<span className={`text-subtitleFont shrink-0 ${flexLayout ? "ml-auto" : "flex-1 text-right"}`} style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+                                    <ResumeText field={`customData.${sectionId}.${item.id}.dateRange`} role="date"><span style={{ fontWeight: (item.fieldBold?.dateRange ?? false) ? 700 : 400 }}>{item.dateRange}</span></ResumeText>
+                                </span>)}
+                        </motion.div>
+                        {!centerSubtitle && item.subtitle && (
+                            <motion.div layout="position" className="text-subtitleFont mt-1" style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}>{<ResumeText field={`customData.${sectionId}.${item.id}.subtitle`} role="subtitle"><span style={{ fontWeight: (item.fieldBold?.subtitle ?? false) ? 700 : 400 }}>{item.subtitle}</span></ResumeText>}</motion.div>
+                        )}
+                            </div>}
                             {item.description && (
                             <ResumeText field={`customData.${sectionId}.${item.id}.description`} role="body">
                             <motion.div layout="position" className="mt-1 text-baseFont"

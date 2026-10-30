@@ -104,6 +104,7 @@ interface ResumeStore {
 type PersistedResumeStore = Pick<ResumeStore, "resumes" | "activeResumeId">;
 
 const createDefaultCustomItem = (): CustomItem => ({
+  layoutMode: "free",
   id: generateUUID(),
   title: "未命名模块",
   subtitle: "",
