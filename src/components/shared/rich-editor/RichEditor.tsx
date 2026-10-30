@@ -36,6 +36,7 @@ import {
   Unlink,
   Minus,
   Space,
+  SlidersHorizontal,
 } from "lucide-react";
 import Highlight from "@tiptap/extension-highlight";
 import { cn } from "@/lib/utils";
@@ -48,6 +49,8 @@ import {
 } from "@/lib/richText";
 import { BetterSpace } from "./BetterSpace";
 import { ResumeDivider } from "./ResumeDivider";
+import { DividerDimensions, DividerSpaceHeight } from "@/components/editor/DividerDimensions";
+import { dividerWidth, dividerThickness, dividerSpaceHeight } from "@/lib/dividers";
 import { toast } from "sonner";
 import "@/styles/tiptap.scss";
 
@@ -146,6 +149,37 @@ const MenuButton = ({
         </div>
       )}
     </div>
+  );
+};
+
+const DividerSizeButton = ({ editor }: { editor: Editor }) => {
+  const t = useTranslations("richEditor");
+  const [open, setOpen] = React.useState(false);
+  const [width, setWidth] = React.useState(100);
+  const [thickness, setThickness] = React.useState(1);
+  const [height, setHeight] = React.useState(16);
+  const [kind, setKind] = React.useState("line");
+  const selected = editor.isActive("resumeDivider");
+  const handleOpen = (next: boolean) => {
+    if (next) {
+      const attrs = editor.getAttributes("resumeDivider");
+      setKind(attrs.kind === "space" ? "space" : "line");
+      setWidth(dividerWidth(attrs.width));
+      setThickness(dividerThickness(attrs.thickness));
+      setHeight(dividerSpaceHeight(attrs.height));
+    }
+    setOpen(next);
+  };
+  return (
+    <Popover open={open} onOpenChange={handleOpen}>
+      <PopoverTrigger asChild>
+        <Button type="button" variant="ghost" size="sm" className="h-9 w-9 p-0" aria-label={t("dividerSize")} title={t("dividerSize")} disabled={!selected} onMouseDown={(event) => event.preventDefault()}><SlidersHorizontal className="h-5 w-5" /></Button>
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-64 space-y-4">
+        {kind === "space" ? <DividerSpaceHeight label={t("spaceHeight")} height={height} onChange={setHeight} /> : <DividerDimensions width={width} thickness={thickness} onWidthChange={setWidth} onThicknessChange={setThickness} labels={{ width: t("lineWidth"), thickness: t("lineThickness") }} />}
+        <Button type="button" size="sm" className="w-full" onClick={() => { editor.chain().focus().updateAttributes("resumeDivider", { width, thickness, height }).run(); setOpen(false); }}>{t("applyDividerSize")}</Button>
+      </PopoverContent>
+    </Popover>
   );
 };
 
@@ -531,6 +565,7 @@ const RichTextEditor = ({
           <LinkButton editor={editor} />
           <MenuButton tooltip={t("insertDivider")} onClick={() => editor.chain().focus().insertContent({ type: "resumeDivider", attrs: { kind: "line" } }).run()}><Minus className="h-5 w-5" /></MenuButton>
           <MenuButton tooltip={t("insertSpace")} onClick={() => editor.chain().focus().insertContent({ type: "resumeDivider", attrs: { kind: "space" } }).run()}><Space className="h-5 w-5" /></MenuButton>
+          <DividerSizeButton editor={editor} />
           <TextColorButton editor={editor} />
           <BackgroundColorButton editor={editor} />
           <FontSizeSelect editor={editor} />

@@ -206,6 +206,9 @@ export type CustomField = "title" | "subtitle" | "dateRange" | "description";
 export interface CustomItem {
   /** Optional separator following this entry. */
   separatorAfter?: "line" | "space";
+  separatorWidth?: number;
+  separatorThickness?: number;
+  separatorHeight?: number;
   /** Missing mode preserves the template layout for existing entries. */
   layoutMode?: "original" | "free";
   hiddenFields?: CustomField[];

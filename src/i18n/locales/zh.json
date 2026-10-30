@@ -969,6 +969,11 @@
     "toPresent": "至今"
   },
   "richEditor": {
+    "dividerSize": "调整选中分隔",
+    "spaceHeight": "留白高度",
+    "lineWidth": "线条长度",
+    "lineThickness": "线条粗细",
+    "applyDividerSize": "应用",
     "insertDivider": "插入淡分割线",
     "insertSpace": "插入透明留白",
     "bold": "加粗",

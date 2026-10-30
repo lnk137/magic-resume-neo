@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 import { useResumeStore } from "@/store/useResumeStore";
 import { GripVertical, Eye, EyeOff, ChevronDown, Trash2, Copy, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import Field from "../Field";
+import { DividerDimensions, DividerSpaceHeight } from "../DividerDimensions";
+import { dividerWidth, dividerThickness, dividerSpaceHeight } from "@/lib/dividers";
 
 import { CustomItem as CustomItemType, CustomField } from "@/types/resume";
 import { Input } from "@/components/ui/input";
@@ -61,6 +63,12 @@ const CustomItemEditor = ({
               ))}
             </div>
           </div>
+          {item.separatorAfter === "line" && (
+            <DividerDimensions width={dividerWidth(item.separatorWidth)} thickness={dividerThickness(item.separatorThickness)} labels={{ width: "线条长度", thickness: "线条粗细" }} onWidthChange={(value) => onSave({ ...item, separatorWidth: value })} onThicknessChange={(value) => onSave({ ...item, separatorThickness: value })} />
+          )}
+          {item.separatorAfter === "space" && (
+            <DividerSpaceHeight label="留白高度" height={dividerSpaceHeight(item.separatorHeight)} onChange={(value) => onSave({ ...item, separatorHeight: value })} />
+          )}
           <div className="flex items-center justify-between gap-3 pt-1">
             <span className="text-sm">正文对齐</span>
             <div className="flex gap-1">

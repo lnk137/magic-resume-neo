@@ -1014,6 +1014,11 @@
     "toPresent": "To Present"
   },
   "richEditor": {
+    "dividerSize": "Adjust selected divider",
+    "spaceHeight": "Space height",
+    "lineWidth": "Line length",
+    "lineThickness": "Line thickness",
+    "applyDividerSize": "Apply",
     "insertDivider": "Insert subtle divider",
     "insertSpace": "Insert blank space",
     "bold": "Bold",
