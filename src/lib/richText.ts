@@ -68,6 +68,25 @@ export const stripTrailingListParagraph = (content?: string) => {
   return normalized;
 };
 
+/** TipTap's textStyle mark reads colors from spans, including when HTML was imported
+ * with colors on bold, links, or block elements instead. Only normalize the editor
+ * input; the stored content is changed only when the user actually edits it. */
+export const normalizeEditorTextColors = (content: string) => {
+  if (!content || typeof document === "undefined") return content;
+  const template = document.createElement("template");
+  template.innerHTML = content;
+  for (const element of template.content.querySelectorAll<HTMLElement>("[style]")) {
+    if (element.tagName === "SPAN" || !element.style.color) continue;
+    const span = document.createElement("span");
+    span.style.color = element.style.color;
+    while (element.firstChild) span.appendChild(element.firstChild);
+    element.appendChild(span);
+    element.style.removeProperty("color");
+    if (!element.getAttribute("style")?.trim()) element.removeAttribute("style");
+  }
+  return template.innerHTML;
+};
+
 export const normalizeLinkHref = (href?: string) => {
   if (!href) return null;
 

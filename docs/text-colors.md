@@ -1,6 +1,6 @@
 # Resume text colors
 
-The style panel offers six defaults: body, name, section headings, item titles, subtitles, and dates. Each plain-text editor field and each module heading also has a small paintbrush control. A field override takes precedence over its default; Restore default removes the override. Rich-text toolbar colors apply to selected words and retain priority over the body default.
+The style panel offers six defaults: body, name, section headings, item titles, subtitles, and dates. Each plain-text editor field and each module heading also has a small paintbrush control. A field override takes precedence over its default; Restore default removes the override. Rich-text toolbar colors apply to selected words and retain priority over the body default. Imported text colors on bold, links or paragraphs are displayed in the editor and preserved when editing.
 
 The shared palette supports keyboard-operable saturation/hue controls, curated swatches, exact six-digit HEX, eight recent colors, reset, and a contrast preview against white paper. Partial or invalid HEX input stays local and never enters resume data. Recent colors are stored locally and are optional if browser storage is unavailable. The presentation follows Adobe Spectrum's color-area/field pattern and Radix's text contrast guidance:
 
