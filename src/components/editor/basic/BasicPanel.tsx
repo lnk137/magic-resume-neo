@@ -9,6 +9,7 @@ import PhotoUpload from "@/components/shared/PhotoSelector";
 import IconSelector from "../IconSelector";
 import AlignSelector from "./AlignSelector";
 import Field from "../Field";
+import { FieldColor } from "../FieldColor";
 import { cn } from "@/lib/utils";
 import { DEFAULT_FIELD_ORDER } from "@/config";
 import { useResumeStore } from "@/store/useResumeStore";
@@ -46,7 +47,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
       <motion.div
         {...itemAnimations}
         className={cn(
-          "grid grid-cols-[auto,auto,1fr,1fr,auto,auto] gap-3 items-center p-3",
+          "flex items-start gap-2 p-3",
           "bg-card rounded-xl",
           "border border-border",
           "transition-all duration-200",
@@ -54,7 +55,7 @@ const CustomField: React.FC<CustomFieldProps> = ({
           !field.visible && "!opacity-60"
         )}
       >
-        <div className="flex items-center justify-center">
+        <div className="flex h-10 items-center justify-center">
           <GripVertical
             className={cn(
               "w-4 h-4 cursor-grab active:cursor-grabbing",
@@ -64,48 +65,54 @@ const CustomField: React.FC<CustomFieldProps> = ({
             )}
           />
         </div>
-        <div className="flex items-center justify-center">
+        <div className="flex h-10 items-center justify-center">
           <IconSelector
             value={field.icon}
             onChange={(value) => onUpdate({ ...field, icon: value })}
           />
         </div>
-        <Field
+        <div className="min-w-0 flex-1 space-y-2">
+        <div className="flex items-center gap-2">
+        <Input
           value={field.label ?? ""}
-          onChange={(value) =>
+          onChange={(event) =>
             onUpdate({
               ...field,
-              label: value,
+              label: event.target.value,
             })
           }
           placeholder={t("customFields.placeholders.label")}
+          aria-label={t("customFields.placeholders.label")}
           className={cn(
-            "bg-background/50",
+            "min-w-0 flex-1 bg-background/50",
             "border-border",
             "focus:border-primary",
             "placeholder-muted-foreground"
           )}
         />
-        <Field
-          colorPath={`basic.customFields.${field.id}`}
+        <Input
           value={field.value}
-          onChange={(value) =>
+          onChange={(event) =>
             onUpdate({
               ...field,
-              value: value,
+              value: event.target.value,
             })
           }
           placeholder={t("customFields.placeholders.value")}
+          aria-label={t("customFields.placeholders.value")}
           className={cn(
-            "bg-background/50",
+            "min-w-0 flex-1 bg-background/50",
             "border-border",
             "focus:border-primary",
             "placeholder-muted-foreground"
           )}
         />
-
+        <FieldColor path={`basic.customFields.${field.id}`} label={field.label || t("customFields.placeholders.value")} />
+        </div>
+        <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 whitespace-nowrap">
           <Switch
+            aria-label={t("customFields.displayLabel")}
             checked={field.displayLabel ?? false}
             onCheckedChange={(checked) =>
               onUpdate({
@@ -121,6 +128,8 @@ const CustomField: React.FC<CustomFieldProps> = ({
 
         <div className="flex items-center space-x-1">
           <Button
+            type="button"
+            aria-label={field.visible ? "隐藏字段" : "显示字段"}
             variant="ghost"
             size="sm"
             className={cn(
@@ -138,6 +147,8 @@ const CustomField: React.FC<CustomFieldProps> = ({
           </Button>
 
           <Button
+            type="button"
+            aria-label="删除字段"
             variant="ghost"
             size="sm"
             onClick={() => onDelete(field.id)}
@@ -149,6 +160,8 @@ const CustomField: React.FC<CustomFieldProps> = ({
           >
             <Trash2 className="w-4 h-4 text-red-400" />
           </Button>
+        </div>
+        </div>
         </div>
       </motion.div>
     </Reorder.Item>
@@ -287,7 +300,7 @@ const BasicPanel: React.FC = () => {
         <motion.div
           {...itemAnimations}
           className={cn(
-            "flex items-center gap-4 p-4 pr-3",
+            "flex flex-wrap items-center gap-x-3 gap-y-2 p-3",
             "bg-card",
             "rounded-lg ",
             "transition-all duration-200",
@@ -307,7 +320,7 @@ const BasicPanel: React.FC = () => {
             </div>
           )}
 
-          <div className="flex flex-1 min-w-0 items-center">
+          <div className="flex flex-1 min-w-0 items-center gap-1">
             {field.key !== "name" && field.key !== "title" && (
               <IconSelector
                 value={selectedIcon}
@@ -322,25 +335,11 @@ const BasicPanel: React.FC = () => {
                 }}
               />
             )}
-            <div className=" w-[80px] ml-[4px] text-sm font-medium text-foreground">
+            <div className="min-w-0 text-sm font-medium text-foreground">
               {t(`basicFields.${field.key}`)}
             </div>
-            <div className="flex-1">
-              <Field
-                label=""
-                colorPath={`basic.${field.key}`}
-                value={(basic?.[field.key] as string) ?? ""}
-                onChange={(value) =>
-                  updateBasicInfo({
-                    ...basic,
-                    [field.key]: value,
-                  })
-                }
-                placeholder={`请输入${field.label}`}
-                type={field.type}
-              />
-            </div>
           </div>
+
 
           <div className="flex items-center gap-1">
             <Button
@@ -374,6 +373,17 @@ const BasicPanel: React.FC = () => {
                 <Trash2 className="w-4 h-4 text-red-400" />
               </Button>
             )}
+          </div>
+          <div className="flex w-full min-w-0 items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <Field
+                value={(basic?.[field.key] as string) ?? ""}
+                onChange={(value) => updateBasicInfo({ ...basic, [field.key]: value })}
+                placeholder={`请输入${field.label}`}
+                type={field.type}
+              />
+            </div>
+            <FieldColor path={`basic.${field.key}`} label={t(`basicFields.${field.key}`)} />
           </div>
         </motion.div>
       </Reorder.Item>
