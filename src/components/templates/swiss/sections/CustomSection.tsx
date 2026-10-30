@@ -26,9 +26,9 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
         <SectionWrapper sectionId={sectionId} style={{ marginTop: `${globalSettings?.sectionSpacing || 24}px` }}>
             <SectionTitle title={title} type="custom" globalSettings={globalSettings} showTitle={showTitle} />
             <AnimatePresence mode="popLayout">
-                <div className="flex flex-col gap-6" style={{ marginTop: `${globalSettings?.paragraphSpacing || 16}px` }}>
-                    {visibleItems.map((item) => (
-                        <motion.div key={item.id} layout="position" className="group">
+                <div className="flex flex-col" style={{ marginTop: `${globalSettings?.paragraphSpacing || 16}px` }}>
+                    {visibleItems.map((item, index) => (
+                        <motion.div key={item.id} layout="position" className="group" style={{ marginTop: index > 0 && !visibleItems[index - 1].separatorAfter ? 24 : 0 }}>
                             {item.layoutMode === "free" ? <CustomItemHeader item={item} sectionId={sectionId} globalSettings={globalSettings} /> : <div data-custom-legacy-header={item.id}>
                             {/* 不对称网格对齐头部 */}
                             <div className="flex items-baseline justify-between gap-3">

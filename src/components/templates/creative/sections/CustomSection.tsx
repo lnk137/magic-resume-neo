@@ -25,8 +25,8 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
         <SectionWrapper sectionId={sectionId} style={{ marginTop: `${globalSettings?.sectionSpacing || 24}px` }}>
             <SectionTitle title={title} type="custom" globalSettings={globalSettings} showTitle={showTitle} />
             <AnimatePresence mode="popLayout">
-                {visibleItems.map((item) => (
-                    <motion.div key={item.id} layout="position" style={{ marginTop: `${globalSettings?.paragraphSpacing}px` }}>
+                {visibleItems.map((item, index) => (
+                    <motion.div key={item.id} layout="position" style={{ marginTop: `${index > 0 && visibleItems[index - 1].separatorAfter ? 0 : globalSettings?.paragraphSpacing}px` }}>
                             {item.layoutMode === "free" ? <CustomItemHeader item={item} sectionId={sectionId} globalSettings={globalSettings} /> : <div data-custom-legacy-header={item.id}>
                         <motion.div layout="position" className="flex items-center gap-2">
                             <div className={`flex items-center gap-2 ${flexLayout ? "" : "flex-[1.5]"}`}>

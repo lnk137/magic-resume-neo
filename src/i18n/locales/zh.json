@@ -970,6 +970,9 @@
     "toPresent": "至今"
   },
   "richEditor": {
+    "lineSpacing": "上下间距",
+    "solidLine": "淡线",
+    "dashedLine": "淡虚线",
     "dividerSize": "调整选中分隔",
     "spaceHeight": "留白高度",
     "lineWidth": "线条长度",

@@ -50,7 +50,7 @@ import {
 import { BetterSpace } from "./BetterSpace";
 import { ResumeDivider } from "./ResumeDivider";
 import { DividerDimensions, DividerSpaceHeight } from "@/components/editor/DividerDimensions";
-import { dividerWidth, dividerThickness, dividerSpaceHeight } from "@/lib/dividers";
+import { dividerWidth, dividerThickness, dividerSpaceHeight, dividerSpacing } from "@/lib/dividers";
 import { toast } from "sonner";
 import "@/styles/tiptap.scss";
 
@@ -159,11 +159,13 @@ const DividerSizeButton = ({ editor }: { editor: Editor }) => {
   const [thickness, setThickness] = React.useState(1);
   const [height, setHeight] = React.useState(16);
   const [kind, setKind] = React.useState("line");
+  const [spacing, setSpacing] = React.useState(12);
   const selected = editor.isActive("resumeDivider");
   const handleOpen = (next: boolean) => {
     if (next) {
       const attrs = editor.getAttributes("resumeDivider");
-      setKind(attrs.kind === "space" ? "space" : "line");
+      setKind(attrs.kind === "space" ? "space" : attrs.kind === "dashed" ? "dashed" : "line");
+      setSpacing(dividerSpacing(attrs.spacing));
       setWidth(dividerWidth(attrs.width));
       setThickness(dividerThickness(attrs.thickness));
       setHeight(dividerSpaceHeight(attrs.height));
@@ -176,8 +178,8 @@ const DividerSizeButton = ({ editor }: { editor: Editor }) => {
         <Button type="button" variant="ghost" size="sm" className="h-9 w-9 p-0" aria-label={t("dividerSize")} title={t("dividerSize")} disabled={!selected} onMouseDown={(event) => event.preventDefault()}><SlidersHorizontal className="h-5 w-5" /></Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-64 space-y-4">
-        {kind === "space" ? <DividerSpaceHeight label={t("spaceHeight")} height={height} onChange={setHeight} /> : <DividerDimensions width={width} thickness={thickness} onWidthChange={setWidth} onThicknessChange={setThickness} labels={{ width: t("lineWidth"), thickness: t("lineThickness") }} />}
-        <Button type="button" size="sm" className="w-full" onClick={() => { editor.chain().focus().updateAttributes("resumeDivider", { width, thickness, height }).run(); setOpen(false); }}>{t("applyDividerSize")}</Button>
+        {kind === "space" ? <DividerSpaceHeight label={t("spaceHeight")} height={height} onChange={setHeight} /> : <><DividerDimensions width={width} thickness={thickness} onWidthChange={setWidth} onThicknessChange={setThickness} labels={{ width: t("lineWidth"), thickness: t("lineThickness") }} /><DividerSpaceHeight label={t("lineSpacing")} height={spacing} onChange={setSpacing} /><div className="flex gap-2"><Button type="button" size="sm" variant={kind === "line" ? "secondary" : "ghost"} onClick={() => setKind("line")}>{t("solidLine")}</Button><Button type="button" size="sm" variant={kind === "dashed" ? "secondary" : "ghost"} onClick={() => setKind("dashed")}>{t("dashedLine")}</Button></div></>}
+        <Button type="button" size="sm" className="w-full" onClick={() => { editor.chain().focus().updateAttributes("resumeDivider", { width, thickness, height, spacing, kind }).run(); setOpen(false); }}>{t("applyDividerSize")}</Button>
       </PopoverContent>
     </Popover>
   );

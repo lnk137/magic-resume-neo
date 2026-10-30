@@ -64,10 +64,11 @@ export function validateResume(resume) {
   for (const entry of resume.certificates) { checkFields(entry,['url']); if(typeof entry.width !== 'number' || entry.width < 1 || entry.width > 100) throw new Error('Certificate width must be 1–100'); }
   for (const entries of Object.values(resume.customData)) for (const entry of entries) {
     checkFields(entry,['title','subtitle','dateRange','description']);
+    if (entry.separatorSpacing !== undefined && (typeof entry.separatorSpacing !== 'number' || !Number.isFinite(entry.separatorSpacing) || entry.separatorSpacing < 1 || entry.separatorSpacing > 100)) throw new Error('Invalid separatorSpacing');
     if (entry.separatorHeight !== undefined && (typeof entry.separatorHeight !== 'number' || !Number.isFinite(entry.separatorHeight) || entry.separatorHeight < 1 || entry.separatorHeight > 100)) throw new Error('Invalid separatorHeight');
     if (entry.separatorWidth !== undefined && (typeof entry.separatorWidth !== 'number' || !Number.isFinite(entry.separatorWidth) || entry.separatorWidth < 1 || entry.separatorWidth > 100)) throw new Error('Invalid separatorWidth');
     if (entry.separatorThickness !== undefined && (typeof entry.separatorThickness !== 'number' || !Number.isFinite(entry.separatorThickness) || entry.separatorThickness < 0.5 || entry.separatorThickness > 5)) throw new Error('Invalid separatorThickness');
-    if (entry.separatorAfter !== undefined && !['line','space'].includes(entry.separatorAfter)) throw new Error('Invalid separatorAfter');
+    if (entry.separatorAfter !== undefined && !['line','dashed','space'].includes(entry.separatorAfter)) throw new Error('Invalid separatorAfter');
     if (entry.layoutMode !== undefined && !['original','free'].includes(entry.layoutMode)) throw new Error('Invalid layoutMode');
     if (entry.hiddenFields !== undefined && (!Array.isArray(entry.hiddenFields) || entry.hiddenFields.some(f=>!['title','subtitle','dateRange','description'].includes(f)))) throw new Error('Invalid hiddenFields');
     if (entry.fieldBold !== undefined) for (const [field, bold] of Object.entries(object(entry.fieldBold))) { if (!['title','subtitle','dateRange'].includes(field) || typeof bold !== 'boolean') throw new Error('Invalid fieldBold'); }

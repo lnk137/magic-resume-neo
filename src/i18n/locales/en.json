@@ -1015,6 +1015,9 @@
     "toPresent": "To Present"
   },
   "richEditor": {
+    "lineSpacing": "Spacing",
+    "solidLine": "Solid",
+    "dashedLine": "Dashed",
     "dividerSize": "Adjust selected divider",
     "spaceHeight": "Space height",
     "lineWidth": "Line length",

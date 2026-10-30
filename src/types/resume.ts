@@ -205,7 +205,8 @@ export type CustomField = "title" | "subtitle" | "dateRange" | "description";
 
 export interface CustomItem {
   /** Optional separator following this entry. */
-  separatorAfter?: "line" | "space";
+  separatorAfter?: "line" | "dashed" | "space";
+  separatorSpacing?: number;
   separatorWidth?: number;
   separatorThickness?: number;
   separatorHeight?: number;

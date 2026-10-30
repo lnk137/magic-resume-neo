@@ -12,7 +12,7 @@ import { useResumeStore } from "@/store/useResumeStore";
 import { GripVertical, Eye, EyeOff, ChevronDown, Trash2, Copy, AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import Field from "../Field";
 import { DividerDimensions, DividerSpaceHeight } from "../DividerDimensions";
-import { dividerWidth, dividerThickness, dividerSpaceHeight } from "@/lib/dividers";
+import { dividerWidth, dividerThickness, dividerSpaceHeight, dividerSpacing } from "@/lib/dividers";
 
 import { CustomItem as CustomItemType, CustomField } from "@/types/resume";
 import { Input } from "@/components/ui/input";
@@ -58,13 +58,13 @@ const CustomItemEditor = ({
           <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
             <span className="text-sm">条目后分隔</span>
             <div className="flex rounded-md bg-muted p-1" role="group" aria-label="条目后分隔">
-              {([{ value: "none", label: "无" }, { value: "line", label: "淡线" }, { value: "space", label: "留白" }] as const).map(({ value, label }) => (
+              {([{ value: "none", label: "无" }, { value: "line", label: "淡线" }, { value: "dashed", label: "淡虚线" }, { value: "space", label: "留白" }] as const).map(({ value, label }) => (
                 <Button key={value} type="button" size="sm" variant={(item.separatorAfter ?? "none") === value ? "secondary" : "ghost"} aria-pressed={(item.separatorAfter ?? "none") === value} onClick={() => onSave({ ...item, separatorAfter: value === "none" ? undefined : value })}>{label}</Button>
               ))}
             </div>
           </div>
-          {item.separatorAfter === "line" && (
-            <DividerDimensions width={dividerWidth(item.separatorWidth)} thickness={dividerThickness(item.separatorThickness)} labels={{ width: "线条长度", thickness: "线条粗细" }} onWidthChange={(value) => onSave({ ...item, separatorWidth: value })} onThicknessChange={(value) => onSave({ ...item, separatorThickness: value })} />
+          {(item.separatorAfter === "line" || item.separatorAfter === "dashed") && (
+            <><DividerDimensions width={dividerWidth(item.separatorWidth)} thickness={dividerThickness(item.separatorThickness)} labels={{ width: "线条长度", thickness: "线条粗细" }} onWidthChange={(value) => onSave({ ...item, separatorWidth: value })} onThicknessChange={(value) => onSave({ ...item, separatorThickness: value })} /><DividerSpaceHeight label="上下间距" height={dividerSpacing(item.separatorSpacing)} onChange={(value) => onSave({ ...item, separatorSpacing: value })} /></>
           )}
           {item.separatorAfter === "space" && (
             <DividerSpaceHeight label="留白高度" height={dividerSpaceHeight(item.separatorHeight)} onChange={(value) => onSave({ ...item, separatorHeight: value })} />
