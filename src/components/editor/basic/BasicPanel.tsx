@@ -190,6 +190,22 @@ const BasicPanel: React.FC = () => {
   const customFieldsRef = useRef(customFields);
   const t = useTranslations("workbench.basicPanel");
 
+  // Desktop and mobile editors can remain mounted at the same time. Keep each
+  // instance in sync with persisted edits, undo and MCP changes from the other.
+  useEffect(() => {
+    setCustomFields((basic?.customFields ?? []).map((field) => ({
+      ...field,
+      visible: field.visible ?? true,
+    })));
+  }, [basic?.customFields]);
+
+  useEffect(() => {
+    setBasicFields((basic?.fieldOrder ?? DEFAULT_FIELD_ORDER).map((field) => ({
+      ...field,
+      visible: field.visible ?? true,
+    })));
+  }, [basic?.fieldOrder]);
+
   useEffect(() => {
     basicFieldsRef.current = basicFields;
   }, [basicFields]);

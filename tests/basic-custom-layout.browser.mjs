@@ -23,7 +23,7 @@ test('custom basic fields remain aligned and editable at desktop and mobile widt
   const value = page.getByRole('textbox', { name: '值', exact: true });
   await label.waitFor();
   const check = async () => {
-    const boxes = await Promise.all([label.boundingBox(), value.boundingBox(), label.locator('xpath=../..').getByRole('button', { name: '姓名颜色' }).boundingBox(), page.getByRole('switch', { name: '显示标签' }).boundingBox()]);
+    const boxes = await Promise.all([label.boundingBox(), value.boundingBox(), label.locator('xpath=../..').getByRole('button', { name: /颜色$/ }).boundingBox(), page.getByRole('switch', { name: '显示标签' }).boundingBox()]);
     assert.ok(boxes.every(Boolean));
     assert.ok(Math.abs(boxes[0].y - boxes[1].y) < 1, 'inputs must share a baseline');
     assert.ok(boxes[2].y >= boxes[1].y && boxes[2].y + boxes[2].height <= boxes[1].y + boxes[1].height, 'color control aligns with inputs');
@@ -33,18 +33,22 @@ test('custom basic fields remain aligned and editable at desktop and mobile widt
     assert.ok(boxes.every(box => box.x >= 0 && box.x + box.width <= page.viewportSize().width + 1), 'controls stay on screen');
   };
   await check();
+  await label.fill('院校');
+  await value.fill('南京林业大学');
+  await page.getByRole('switch', { name: '显示标签' }).click();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: '内容', exact: true }).click();
   await label.scrollIntoViewIfNeeded();
   await check();
-  await label.fill('院校');
-  assert.equal(await label.inputValue(), '院校');
-  await value.fill('南京林业大学');
-  assert.equal(await label.inputValue(), '院校');
-  await page.getByRole('switch', { name: '显示标签' }).click();
-  assert.equal(await label.inputValue(), '院校');
   assert.equal(await label.inputValue(), '院校');
   assert.equal(await value.inputValue(), '南京林业大学');
   assert.equal(await page.getByRole('switch', { name: '显示标签' }).getAttribute('data-state'), 'checked');
+  await page.evaluate(async () => {
+    const { useResumeStore } = await import('/src/store/useResumeStore.ts');
+    const state = useResumeStore.getState();
+    state.updateBasicInfo({ customFields: [{ ...state.activeResume.basic.customFields[0], value: '外部更新' }] });
+  });
+  await page.waitForFunction(() => [...document.querySelectorAll('input')].some(input => input.value === '外部更新'));
+  assert.equal(await value.inputValue(), '外部更新');
   await page.screenshot({ path: 'node_modules/.cache/basic-custom-layout.png' });
 });
