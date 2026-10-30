@@ -34,6 +34,8 @@ import {
   Wand2,
   Link2,
   Unlink,
+  Minus,
+  Space,
 } from "lucide-react";
 import Highlight from "@tiptap/extension-highlight";
 import { cn } from "@/lib/utils";
@@ -45,6 +47,7 @@ import {
   stripTrailingListParagraph,
 } from "@/lib/richText";
 import { BetterSpace } from "./BetterSpace";
+import { ResumeDivider } from "./ResumeDivider";
 import { toast } from "sonner";
 import "@/styles/tiptap.scss";
 
@@ -112,6 +115,7 @@ const MenuButton = ({
     <div className="relative" onClick={(e) => e.stopPropagation()}>
       <Button
         onMouseDown={(e) => e.preventDefault()}
+        aria-label={tooltip}
         variant={isActive ? "secondary" : "ghost"}
         size="sm"
         className={cn(
@@ -428,6 +432,7 @@ const RichTextEditor = ({
       }),
       Highlight.configure({ multicolor: true }),
       BetterSpace,
+      ResumeDivider,
     ],
     []
   );
@@ -524,6 +529,8 @@ const RichTextEditor = ({
             <UnderlineIcon className="h-5 w-5" />
           </MenuButton>
           <LinkButton editor={editor} />
+          <MenuButton tooltip={t("insertDivider")} onClick={() => editor.chain().focus().insertContent({ type: "resumeDivider", attrs: { kind: "line" } }).run()}><Minus className="h-5 w-5" /></MenuButton>
+          <MenuButton tooltip={t("insertSpace")} onClick={() => editor.chain().focus().insertContent({ type: "resumeDivider", attrs: { kind: "space" } }).run()}><Space className="h-5 w-5" /></MenuButton>
           <TextColorButton editor={editor} />
           <BackgroundColorButton editor={editor} />
           <FontSizeSelect editor={editor} />

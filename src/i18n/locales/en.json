@@ -1014,6 +1014,8 @@
     "toPresent": "To Present"
   },
   "richEditor": {
+    "insertDivider": "Insert subtle divider",
+    "insertSpace": "Insert blank space",
     "bold": "Bold",
     "italic": "Italic",
     "underline": "Underline",

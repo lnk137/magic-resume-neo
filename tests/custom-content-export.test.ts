@@ -21,3 +21,14 @@ test("custom markdown retains free right content, emphasis and field visibility"
   resume.customData["custom-1"][0].dateRange = "Any right text";
   assert.ok(generateResumeMarkdown(resume).includes("**Any right text**"));
 });
+
+test("Markdown exports a visible divider without turning transparent space into a line", () => {
+  const resume = {
+    ...structuredClone(blankResumeState), id: "dividers", title: "Resume", createdAt: "", updatedAt: "", templateId: null,
+    menuSections: [{ id: "custom-1", title: "Awards", icon: "", enabled: true, order: 0 }],
+    customData: { "custom-1": [{ id: "a", title: "Project", subtitle: "", dateRange: "", visible: true, description: '<p>Alpha</p><hr data-resume-divider="space" style="height:16px"><p>Beta</p><hr data-resume-divider="line"><p>Gamma</p>' }] },
+  } as ResumeData;
+  const markdown = generateResumeMarkdown(resume);
+  assert.match(markdown, /Alpha\s+Beta\s+---\s+Gamma/);
+  assert.equal((markdown.match(/---/g) || []).length, 1);
+});

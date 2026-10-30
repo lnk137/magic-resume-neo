@@ -19,3 +19,5 @@ Each free-text slot has an independent **B** button for bold. Left content defau
 Markdown export also treats the right slot as plain text and preserves slot bold/hidden settings. It joins the visible slots with separators rather than applying date formatting; PDF/image/print use the selected layout from the preview; Markdown preserves content and emphasis but does not reproduce template positioning.
 
 Custom entries can add a separator after the entry through **字段与排版 → 条目后分隔**: choose **淡线** or transparent **留白**, or **无** to remove it. The choice follows the entry when reordered or copied and is reflected in the preview and PDF/image/print output. Markdown exports visible lines as `---`; transparent space cannot be represented reliably in Markdown.
+
+Rich-text toolbars can insert a subtle line or transparent space at the cursor. Transparent spaces are outlined only in the editor; select and delete a divider as an object. These dividers are preserved as HTML in storage and PDF/image/print output; Markdown represents a line as `---` and does not retain exact blank spacing.

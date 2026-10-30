@@ -77,3 +77,5 @@ The integration test uses the official SDK client over stdio, verifies authentic
 SDK implementation follows the [official MCP TypeScript SDK v1 server documentation](https://ts.sdk.modelcontextprotocol.io/server) and [transport security requirements](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports). The app ships the stable `@modelcontextprotocol/sdk` package; no LLM provider key is required to run this MCP server.
 
 Custom module `title`, `subtitle`, `dateRange` now represent free-form **left / center / right** content, not a required date range. `item_update` accepts `fieldBold: { title: false, subtitle: true, dateRange: true }` to set independent emphasis. These optional properties preserve compatibility with older resumes and JSON backups.
+
+Rich text can contain `<hr data-resume-divider="line" style="border:0;border-top:1px solid #e1e1e1;height:0;margin:12px 0">` or `<hr data-resume-divider="space" style="border:0;height:16px;margin:8px 0">`; preserve these safe HTML nodes when editing surrounding text.

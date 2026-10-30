@@ -294,3 +294,9 @@
 [contenteditable]:focus {
   outline: none;
 }
+
+/* Invisible separators are outlined only while editing, never in exports. */
+.tiptap[contenteditable="true"] hr[data-resume-divider="space"] {
+  outline: 1px dashed #d4d4d4;
+  background: #fafafa;
+}

@@ -82,11 +82,14 @@ const applyDateFormat = (text: string, context: MarkdownDateContext) =>
     ? formatDateString(text, context.locale, context.dateFormat)
     : text;
 
-const createTurndownService = () =>
-  new TurndownService({
-    headingStyle: "atx",
-    bulletListMarker: "-"
+const createTurndownService = () => {
+  const service = new TurndownService({ headingStyle: "atx", bulletListMarker: "-" });
+  service.addRule("resumeDivider", {
+    filter: (node) => node.nodeName === "HR" && node.hasAttribute("data-resume-divider"),
+    replacement: (_content, node) => (node as HTMLElement).getAttribute("data-resume-divider") === "space" ? "\n\n" : "\n\n---\n\n",
   });
+  return service;
+};
 
 const markdownFromText = (value?: string) => {
   const normalized = normalizeText(value);
