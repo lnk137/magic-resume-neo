@@ -14,10 +14,11 @@ export default function CustomItemHeader({ item, sectionId, globalSettings }: {
   sectionId: string;
   globalSettings?: GlobalSettings;
 }) {
-  if (!COLUMNS.some(({ field }) => item[field])) return null;
+  const columns = COLUMNS.filter(({ field }) => !item.hiddenFields?.includes(field));
+  if (!columns.some(({ field }) => item[field])) return null;
   return (
-    <div data-custom-header={item.id} style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", alignItems: "baseline", gap: "0.75rem", fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
-      {COLUMNS.map(({ field, align, role }) => (
+    <div data-custom-header={item.id} style={{ display: "grid", gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`, alignItems: "baseline", gap: "0.75rem", fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
+      {columns.map(({ field, align, role }) => (
         <div key={field} data-custom-column={align} className={field === "title" ? undefined : "text-subtitleFont"} style={{ minWidth: 0, textAlign: align, overflowWrap: "anywhere", whiteSpace: "pre-wrap", fontWeight: isCustomFieldBold(item, field) ? 700 : 400 }}>
           <ResumeText field={`customData.${sectionId}.${item.id}.${field}`} role={role as TextColorRole}>{item[field]}</ResumeText>
         </div>
