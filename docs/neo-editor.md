@@ -9,3 +9,5 @@ Custom entries expose **字段与排版** on expansion. Each field can have its 
 **复制模块** creates a new custom module with independent entry IDs, field settings and colors, and selects it immediately. Entry and module copies preserve their content without sharing mutable data.
 
 Validation: `node --test tests/custom-items.test.ts` checks storage preservation and independent formatting copies. With the development server running on port 3211, `node --test tests/neo-editor.browser.mjs` exercises creation, field customization, copying and desktop/mobile navigation in isolated browser storage. Override `TEST_BASE_URL` or `PLAYWRIGHT_EXECUTABLE_PATH` when needed.
+
+Custom module headers use three independent free-text slots: **内容－左 / 内容－中 / 内容－右**. The right slot accepts any text and is rendered verbatim, without date parsing. The middle slot stays centered on the same row regardless of the global subtitle setting. Existing `title`, `subtitle`, `dateRange` keys, colors, labels and contents remain compatible. Long content wraps within its slot.

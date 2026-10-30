@@ -30,8 +30,8 @@ const CustomItemEditor = ({
   };
 
   const fields: { key: CustomField; label: string }[] = [
-    { key: "title", label: "标题" }, { key: "subtitle", label: "副标题" },
-    { key: "dateRange", label: "时间范围" }, { key: "description", label: "详细描述" },
+    { key: "title", label: "内容－左" }, { key: "subtitle", label: "内容－中" },
+    { key: "dateRange", label: "内容－右" }, { key: "description", label: "详细描述" },
   ];
   const label = (field: CustomField) => item.fieldLabels?.[field] || fields.find((entry) => entry.key === field)!.label;
   return (
@@ -62,14 +62,14 @@ const CustomItemEditor = ({
             colorPath={`customData.${sectionId}.${item.id}.title`}
             value={item.title}
             onChange={(value) => handleChange("title", value)}
-            placeholder="标题"
+            placeholder="左侧内容"
           />
           <Field
             label={label("subtitle")}
             colorPath={`customData.${sectionId}.${item.id}.subtitle`}
             value={item.subtitle}
             onChange={(value) => handleChange("subtitle", value)}
-            placeholder="副标题"
+            placeholder="中间内容"
           />
         </div>
 
@@ -78,8 +78,7 @@ const CustomItemEditor = ({
             colorPath={`customData.${sectionId}.${item.id}.dateRange`}
           value={item.dateRange}
           onChange={(value) => handleChange("dateRange", value)}
-          type="date-range"
-          placeholder="例如: 2023.01 - 2024.01"
+          placeholder="右侧内容"
         />
 
         <Field

@@ -1,3 +1,4 @@
+import CustomItemHeader from "../../shared/CustomItemHeader";
 import { visibleCustomItems } from "@/lib/customItems";
 import { ResumeText } from "@/components/templates/shared/ResumeText";
 import React from "react";
@@ -6,8 +7,6 @@ import SectionTitle from "./SectionTitle";
 import SectionWrapper from "../../shared/SectionWrapper";
 import { GlobalSettings, CustomItem } from "@/types/resume";
 import { normalizeRichTextContent } from "@/lib/richText";
-import { formatDateString } from "@/lib/utils";
-import { useLocale } from "@/i18n/compat/client";
 
 interface CustomSectionProps {
     sectionId: string;
@@ -18,9 +17,7 @@ interface CustomSectionProps {
 }
 
 const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = true }: CustomSectionProps) => {
-    const locale = useLocale();
     const visibleItems = visibleCustomItems(items);
-    const centerSubtitle = globalSettings?.centerSubtitle;
     const themeColor = globalSettings?.themeColor || "#E31C24";
 
     return (
@@ -30,42 +27,7 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                 <div className="flex flex-col gap-6" style={{ marginTop: `${globalSettings?.paragraphSpacing || 16}px` }}>
                     {visibleItems.map((item) => (
                         <motion.div key={item.id} layout="position" className="group">
-                            {/* 不对称网格对齐头部 */}
-                            <div className="flex items-baseline justify-between gap-3">
-                                <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-1">
-                                    {item.title && (<h4 
-                                        className="font-extrabold text-slate-800 tracking-tight"
-                                        style={{ fontSize: `${globalSettings?.subheaderSize || 16}px` }}
-                                    >
-                                        {<ResumeText field={`customData.${sectionId}.${item.id}.title`} role="title">{item.title}</ResumeText>}
-                                    </h4>)}
-                                    {centerSubtitle && item.subtitle && (
-                                        <span 
-                                            className="font-medium text-slate-500 border-l border-slate-300 pl-3 text-[14px]"
-                                            style={{ fontSize: `${(globalSettings?.subheaderSize || 16) - 1}px` }}
-                                        >
-                                            {<ResumeText field={`customData.${sectionId}.${item.id}.subtitle`} role="subtitle">{item.subtitle}</ResumeText>}
-                                        </span>
-                                    )}
-                                </div>
-                                {item.dateRange && (<div 
-                                    className="ml-auto self-center font-mono text-slate-400 bg-slate-50 border border-slate-100/80 px-2 py-0.5 rounded text-[11px] font-semibold shrink-0"
-                                >
-                                    <ResumeText field={`customData.${sectionId}.${item.id}.dateRange`} role="date">{formatDateString(item.dateRange, locale, globalSettings?.dateFormat)}</ResumeText>
-                                </div>)}
-                            </div>
-
-                            {/* 非居中模式下的副标题展示 */}
-                            {!centerSubtitle && item.subtitle && (
-                                <div 
-                                    className="font-semibold text-slate-500 mt-1 uppercase tracking-wider"
-                                    style={{ fontSize: `${(globalSettings?.subheaderSize || 16) - 2}px` }}
-                                >
-                                    {<ResumeText field={`customData.${sectionId}.${item.id}.subtitle`} role="subtitle">{item.subtitle}</ResumeText>}
-                                </div>
-                            )}
-
-                            {/* 自定义描述：移除 text-justify 修复列表小点拉伸 bug */}
+                            <CustomItemHeader item={item} sectionId={sectionId} globalSettings={globalSettings} />
                             {item.description && (
                                 <motion.div layout="position" className="relative pl-4 mt-2.5">
                                     <div 
