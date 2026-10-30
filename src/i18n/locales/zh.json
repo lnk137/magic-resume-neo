@@ -291,6 +291,7 @@
       }
     },
     "settings": {
+      "mcp": {"title":"AI · MCP","off":"已关闭","connected":"已连接","connecting":"连接中","guide":"连接说明"},
       "title": "设置",
       "description": "管理系统外观偏好与本地简历数据存储备份。",
       "appearance": {

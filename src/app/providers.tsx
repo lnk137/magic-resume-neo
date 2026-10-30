@@ -1,4 +1,4 @@
-import { McpBridge } from "@/components/mcp/McpBridge";
+import { McpProvider } from "@/components/mcp/McpBridge";
 import { ThemeProvider } from "next-themes";
 import { HeroUIProvider } from "@heroui/react";
 import { useLocale } from "@/i18n/compat/client";
@@ -24,8 +24,7 @@ export function Providers({
         disableTransitionOnChange
         storageKey="magic-resume-theme"
       >
-        {children}
-        <McpBridge />
+        <McpProvider>{children}</McpProvider>
       </ThemeProvider>
     </HeroUIProvider>
   );

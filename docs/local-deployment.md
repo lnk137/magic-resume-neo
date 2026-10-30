@@ -43,7 +43,8 @@ appear automatically on `127.0.0.1:3210`. Export JSON from the original site and
 import it in the local dashboard. Keep the JSON backup until the import is verified.
 
 AI model/provider settings are configured in the local app. They are not copied
-from the hosted site and are not stored in Git. MCP uses a separate local connection;
-see [MCP integration](mcp.md).
+from the hosted site and are not stored in Git. MCP uses a separate local connection and is enabled by default. The browser
+automatically reconnects after the local service restarts. Use 通用设置 → AI · MCP
+to turn it off; the setting is retained. See [MCP integration](mcp.md).
 
 Custom entry layout modes are stored in each resume in browser storage. Updating the local service does not migrate browser data; unmarked entries use original layout and can be switched to free layout in the editor.

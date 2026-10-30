@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
-import { Plug, Unplug, X, Loader2 } from 'lucide-react';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useResumeStore, restoreMcpStoreSnapshot } from '@/store/useResumeStore';
 import { blankResumeState } from '@/config/initialResumeData';
 import { DEFAULT_TEMPLATES } from '@/config';
@@ -10,10 +9,18 @@ import { applyOperation, publicResumes } from '../../../mcp/operations.mjs';
 type Pair = { session_id: string; browser_token: string };
 type Command = { id: string; action: string; args: Record<string, any>; expected_revision: string };
 
-export function McpBridge() {
+const PREFERENCE_KEY = 'magic-resume-mcp-enabled';
+const SESSION_KEY = 'magic-resume-mcp-session';
+const McpContext = createContext<{ enabled: boolean | null; status: string; setEnabled: (enabled: boolean) => void }>({ enabled: null, status: '连接中', setEnabled: () => {} });
+export const useMcp = () => useContext(McpContext);
+
+class McpRequestError extends Error { constructor(message: string, readonly status: number) { super(message); } }
+
+export function McpProvider({ children }: { children: ReactNode }) {
   const [pair, setPair] = useState<Pair | null>(null);
-  const [open, setOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
+  const [enabled, setEnabledState] = useState<boolean | null>(null);
+  const enabledRef = useRef(false);
+  const cleanedPrevious = useRef(false);
   const [status, setStatus] = useState('未连接');
   const revision = useRef(0);
   const generation = useRef('');
@@ -30,25 +37,69 @@ export function McpBridge() {
       body: JSON.stringify(data), signal: AbortSignal.timeout(10000),
     });
     const body = await response.json();
-    if (!response.ok) throw new Error(body.error || '连接失败');
+    if (!response.ok) throw new McpRequestError(body.error || '连接失败', response.status);
     return body;
   }
 
-  async function connect() {
-    setBusy(true);
-    try {
-      const connected: Pair = await request('pair', { label: `${navigator.platform || 'Browser'} · ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` });
-      generation.current = connected.session_id; revision.current = 0; history.current = [];
-      setPair(connected); setStatus('连接中');
-    } catch (error) { setStatus(error instanceof Error ? error.message : '连接失败'); }
-    finally { setBusy(false); }
-  }
+  const setEnabled = (next: boolean) => {
+    try { localStorage.setItem(PREFERENCE_KEY, String(next)); } catch { /* Keep the current tab usable if storage is unavailable. */ }
+    enabledRef.current = next;
+    setEnabledState(next);
+  };
 
-  async function disconnect() {
-    if (!pair) return;
-    setPair(null); history.current = []; setStatus('未连接');
-    try { await request('disconnect', { session_id: pair.session_id }, pair); } catch { /* Server expires offline sessions automatically. */ }
-  }
+  useEffect(() => {
+    let initial = true;
+    try { initial = localStorage.getItem(PREFERENCE_KEY) !== 'false'; } catch { /* Default to enabled. */ }
+    enabledRef.current = initial;
+    setEnabledState(initial);
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === PREFERENCE_KEY) {
+        enabledRef.current = event.newValue !== 'false';
+        setEnabledState(enabledRef.current);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  useEffect(() => {
+    if (enabled !== false) return;
+    setStatus('未连接');
+    history.current = [];
+    if (pair) {
+      setPair(null);
+      try { sessionStorage.removeItem(SESSION_KEY); } catch { /* session storage is optional */ }
+      void request('disconnect', { session_id: pair.session_id }, pair).catch(() => {});
+    }
+  }, [enabled, pair]);
+
+  useEffect(() => {
+    if (enabled !== true || pair) return;
+    let disposed = false;
+    let timer: ReturnType<typeof setTimeout>;
+    async function attempt() {
+      setStatus('连接中');
+      try {
+        if (!cleanedPrevious.current) {
+          cleanedPrevious.current = true;
+          try {
+            const previous: Pair | null = JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null');
+            sessionStorage.removeItem(SESSION_KEY);
+            if (previous?.session_id && previous.browser_token) await request('disconnect', { session_id: previous.session_id }, previous).catch(() => {});
+          } catch { /* Ignore invalid or unavailable session storage. */ }
+        }
+        const connected: Pair = await request('pair', { label: `${navigator.platform || 'Browser'} · ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` }, null);
+        if (disposed) { void request('disconnect', { session_id: connected.session_id }, connected).catch(() => {}); return; }
+        generation.current = connected.session_id; revision.current = 0; history.current = [];
+        try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(connected)); } catch { /* session storage is optional */ }
+        setPair(connected);
+      } catch (error) {
+        if (!disposed) { setStatus(error instanceof Error ? error.message : '连接失败'); timer = setTimeout(attempt, 3000); }
+      }
+    }
+    void attempt();
+    return () => { disposed = true; clearTimeout(timer); };
+  }, [enabled, pair]);
 
   useEffect(() => {
     if (!pair) return;
@@ -107,25 +158,26 @@ export function McpBridge() {
         published = signature;
         ack = null; setStatus('已连接');
         if (result.command) {
-          try { ack = { id: result.command.id, result: apply(result.command) }; }
+          try {
+            if (!enabledRef.current) throw new Error('MCP has been disabled');
+            ack = { id: result.command.id, result: apply(result.command) };
+          }
           catch (error) { ack = { id: result.command.id, error: error instanceof Error ? error.message : 'Edit failed' }; }
         }
-      } catch (error) { if (!disposed) setStatus(error instanceof Error ? error.message : '连接中断'); }
+      } catch (error) {
+        if (!disposed) {
+          if (error instanceof McpRequestError && error.status === 401) {
+            history.current = []; setPair(null);
+            try { sessionStorage.removeItem(SESSION_KEY); } catch { /* session storage is optional */ }
+          }
+          setStatus(error instanceof Error ? error.message : '连接中断');
+        }
+      }
       if (!disposed) timer = setTimeout(tick, ack ? 0 : 900);
     }
     void tick();
     return () => { disposed = true; clearTimeout(timer); };
   }, [pair]);
 
-  return <div className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] left-4 z-[80] text-sm md:bottom-4">
-    {open && <div className="mb-2 w-72 rounded-2xl border border-black/10 bg-[#faf9f6] p-4 text-[#292723] shadow-xl dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-100">
-      <div className="flex items-center justify-between"><span className="font-semibold">AI · MCP</span><button type="button" aria-label="关闭 MCP 面板" onClick={() => setOpen(false)} className="rounded-full p-1 hover:bg-black/5"><X size={16}/></button></div>
-      <p role="status" className="my-3 break-words text-xs text-zinc-500">{status}</p>
-      <button type="button" disabled={busy} onClick={pair ? disconnect : connect} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#302e29] px-4 py-2.5 font-medium text-white transition hover:bg-[#4b4840] disabled:opacity-50">
-        {busy ? <Loader2 size={16} className="animate-spin"/> : pair ? <Unplug size={16}/> : <Plug size={16}/>} {pair ? '断开 AI 访问' : '允许 AI 访问此浏览器'}
-      </button>
-      <a href="/mcp-guide.html" target="_blank" rel="noreferrer" className="mt-3 block text-center text-xs text-zinc-500 underline underline-offset-4">连接说明</a>
-    </div>}
-    <button type="button" aria-label="MCP 连接" aria-expanded={open} onClick={() => setOpen(!open)} className="flex h-9 items-center gap-2 rounded-full border border-black/10 bg-[#faf9f6]/95 px-3 text-xs font-medium text-[#302e29] shadow-sm backdrop-blur transition hover:shadow-md dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-100"><span className={`h-1.5 w-1.5 rounded-full ${pair && status === '已连接' ? 'bg-emerald-500' : 'bg-zinc-400'}`}/><Plug size={13}/> MCP</button>
-  </div>;
+  return <McpContext.Provider value={{ enabled, status, setEnabled }}>{children}</McpContext.Provider>;
 }

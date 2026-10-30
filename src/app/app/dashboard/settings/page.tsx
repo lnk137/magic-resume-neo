@@ -4,9 +4,12 @@ import {
   FolderOpen,
   FolderCheck,
   Trash2,
+  Plug,
 } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { useMcp } from "@/components/mcp/McpBridge";
 import {
   getFileHandle,
   getConfig,
@@ -25,6 +28,7 @@ const SettingsPage = () => {
     useState<FileSystemDirectoryHandle | null>(null);
   const [folderPath, setFolderPath] = useState<string>("");
   const t = useTranslations();
+  const mcp = useMcp();
   const updateResumeFromFile = useResumeStore(
     (state) => state.updateResumeFromFile
   );
@@ -104,6 +108,20 @@ const SettingsPage = () => {
             <LanguageSettings />
           </div>
         </div>
+
+        <section className="rounded-2xl border border-border/80 bg-white/90 p-6 shadow-[0_1px_2px_rgba(28,28,24,0.03),0_6px_20px_rgba(28,28,24,0.02)] dark:bg-card">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex min-w-0 items-center gap-3.5">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-secondary/70"><Plug className="h-4 w-4" /></div>
+              <div className="min-w-0">
+                <h2 className="font-sans text-base font-semibold tracking-tight">{t("dashboard.settings.mcp.title")}</h2>
+                <p role="status" className="mt-1 break-words text-xs text-muted-foreground">{mcp.enabled === false ? t("dashboard.settings.mcp.off") : mcp.status === '已连接' ? t("dashboard.settings.mcp.connected") : mcp.status === '连接中' || mcp.enabled === null ? t("dashboard.settings.mcp.connecting") : mcp.status}</p>
+              </div>
+            </div>
+            <Switch aria-label={t("dashboard.settings.mcp.title")} checked={mcp.enabled === true} disabled={mcp.enabled === null} onCheckedChange={mcp.setEnabled} />
+          </div>
+          <a href="/mcp-guide.html" target="_blank" rel="noreferrer" className="mt-4 inline-block text-xs text-muted-foreground underline underline-offset-4">{t("dashboard.settings.mcp.guide")}</a>
+        </section>
 
         <section className="rounded-2xl border border-border/80 bg-white/90 p-6 shadow-[0_1px_2px_rgba(28,28,24,0.03),0_6px_20px_rgba(28,28,24,0.02)] dark:bg-card">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">

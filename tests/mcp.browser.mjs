@@ -11,7 +11,7 @@ import { createMcpBridge } from '../mcp/bridge-server.mjs';
 const devOrigin = process.env.TEST_BASE_URL || 'http://127.0.0.1:3211';
 test('MCP edits live browser, persists reload, sanitizes HTML and guards undo/manual conflicts', { timeout:90000 }, async t=>{
   mkdirSync('.cache',{recursive:true}); const temp=mkdtempSync(resolve('.cache/mcp-browser-')); t.after(()=>rmSync(temp,{recursive:true,force:true}));
-  const tokenFile=resolve(temp,'token'); const handle=createMcpBridge({tokenFile});
+  const tokenFile=resolve(temp,'token'); let handle=createMcpBridge({tokenFile});
   const proxy=createServer(async(req,res)=>{
     const url=new URL(req.url,`http://${req.headers.host}`);
     if(await handle(req,res,url))return;
@@ -26,16 +26,21 @@ test('MCP edits live browser, persists reload, sanitizes HTML and guards undo/ma
   const id=await page.evaluate(async()=>{const {useResumeStore}=await import('/src/store/useResumeStore.ts'); return useResumeStore.getState().createResume(null,true);});
   await page.goto(`${origin}/app/workbench/${id}`);
   await page.getByRole('navigation',{name:'模块导航'}).first().waitFor();
-  await page.getByRole('button',{name:'MCP 连接',exact:true}).click();
-  await page.getByRole('button',{name:'允许 AI 访问此浏览器',exact:true}).click();
+  assert.equal(await page.getByRole('button',{name:'MCP 连接'}).count(),0);
+  await page.goto(`${origin}/app/dashboard/settings`);
   await page.getByRole('status').filter({hasText:'已连接'}).waitFor();
+  assert.equal(await page.getByRole('switch',{name:'AI · MCP'}).isChecked(),true);
+  await page.goto(`${origin}/app/workbench/${id}`);
+  await page.getByRole('navigation',{name:'模块导航'}).first().waitFor();
   const client=new Client({name:'browser-e2e',version:'1'});
   await client.connect(new StdioClientTransport({command:process.execPath,args:[resolve('mcp/server.mjs')],env:{...process.env,MAGIC_RESUME_URL:origin,MAGIC_RESUME_TOKEN_FILE:tokenFile}}));t.after(()=>client.close());
   const call=async(name,args={})=>{const r=await client.callTool({name,arguments:args});if(r.isError)throw new Error(r.content[0].text);return JSON.parse(r.content[0].text);};
   const sanitizerRegression=await page.evaluate(async()=>{const{sanitizeResumeRichText}=await import('/src/components/mcp/sanitize.ts');const old={skillContent:'<p><mark data-color="#fff000" style="background-color:#fff000"><span style="font-size:21px">unchanged</span></mark></p>',customData:{one:[{id:'1',description:'<small>Custom original</small>'}]},education:[{id:'1',description:'<p>Education</p>'}],experience:[],projects:[{id:'1',description:'<small>Project original</small>'}]};const renamed=sanitizeResumeRichText({...old,title:'Renamed'},old);const imported=sanitizeResumeRichText({...old,skillContent:old.skillContent+'<a href="java&#x73;cript:alert(1)">bad</a>'});return {original:old.skillContent,renamed:renamed.skillContent,project:renamed.projects[0].description,custom:renamed.customData.one[0].description,imported:imported.skillContent};});
   assert.equal(sanitizerRegression.project,'<small>Project original</small>'); assert.equal(sanitizerRegression.custom,'<small>Custom original</small>');
   assert.equal(sanitizerRegression.renamed,sanitizerRegression.original);assert.ok(sanitizerRegression.imported.includes('<mark'));assert.ok(sanitizerRegression.imported.includes('font-size: 21px'));assert.ok(!sanitizerRegression.imported.includes('href='));
-  let state=await call('resume_read',{resume_id:id});
+  // Automatic pairing publishes the active browser before edits.
+  let state; for (let n=0;n<30;n++) { try { state=await call('resume_read',{resume_id:id}); break; } catch { await new Promise(r=>setTimeout(r,200)); } }
+  assert.ok(state);
   const first=await call('resume_update',{resume_id:id,expected_revision:state.revision,data:{basic:{name:'MCP 测试'},globalSettings:{textColors:{body:'#123456'}},skillContent:'<p><a href="java&#x73;cript:alert(1)">safe text</a><span style="color:#112233;position:fixed">skill</span></p>'}});
   assert.equal(first.result.persisted,true);
   const live=await page.evaluate(async()=>{const{useResumeStore}=await import('/src/store/useResumeStore.ts');return useResumeStore.getState().activeResume;});
@@ -59,11 +64,36 @@ test('MCP edits live browser, persists reload, sanitizes HTML and guards undo/ma
   await secondTab.close();
   await page.reload();
   await page.getByRole('navigation',{name:'模块导航'}).first().waitFor();
-  await page.getByRole('button',{name:'MCP 连接',exact:true}).waitFor();
+  await page.goto(`${origin}/app/dashboard/settings`);
+  await page.getByRole('status').filter({hasText:'已连接'}).waitFor();
   const persisted=await page.evaluate(()=>JSON.parse(localStorage.getItem('resume-storage')).state.resumes);
   assert.equal(persisted[id].basic.name,'Manual name');assert.equal(persisted[id].title,'Second tab edit');
-  // Pairing expires on reload; no AI writes are silently re-enabled.
-  await page.getByRole('button',{name:'MCP 连接',exact:true}).click();await page.getByRole('button',{name:'允许 AI 访问此浏览器',exact:true}).waitFor();
+  const oldSession=(await call('resume_read',{resume_id:id})).session_id;
+  handle=createMcpBridge({tokenFile});
+  await page.waitForFunction(async old => {const p=JSON.parse(sessionStorage.getItem('magic-resume-mcp-session') || 'null');return !!p && p.session_id !== old;},oldSession);
+  await page.getByRole('status').filter({hasText:'已连接'}).waitFor();
+  await page.getByRole('switch',{name:'AI · MCP'}).click();
+  await page.getByRole('status').filter({hasText:'已关闭'}).waitFor();
+  await page.reload();
+  await page.getByRole('status').filter({hasText:'已关闭'}).waitFor();
+  assert.equal(await page.getByRole('switch',{name:'AI · MCP'}).isChecked(),false);
+  await page.getByRole('switch',{name:'AI · MCP'}).click();
+  await page.getByRole('status').filter({hasText:'已连接'}).waitFor();
+  const another=await context.newPage();await another.goto(origin+'/app/dashboard/settings');
+  await another.getByRole('status').filter({hasText:'已连接'}).waitFor();
+  await page.getByRole('switch',{name:'AI · MCP'}).click();
+  await another.getByRole('status').filter({hasText:'已关闭'}).waitFor();
+  assert.equal(await another.getByRole('switch',{name:'AI · MCP'}).isChecked(),false);
+  await another.close();
+  await page.getByRole('switch',{name:'AI · MCP'}).click();
+  await page.getByRole('status').filter({hasText:'已连接'}).waitFor();
+  await page.getByRole('switch',{name:'AI · MCP'}).scrollIntoViewIfNeeded();
+  await page.screenshot({path:'node_modules/.cache/mcp-settings-desktop.png'});
+  await page.setViewportSize({width:390,height:844});
+  await page.getByRole('switch',{name:'AI · MCP'}).scrollIntoViewIfNeeded();
+  const switchBox=await page.getByRole('switch',{name:'AI · MCP'}).boundingBox();assert.ok(switchBox.x>=0 && switchBox.x+switchBox.width<=390);
+  await page.screenshot({path:'node_modules/.cache/mcp-settings-mobile.png'});
+  await page.setViewportSize({width:1280,height:900});
   const fileUndo=await page.evaluate(async()=>{
     const {useResumeStore,restoreMcpStoreSnapshot}=await import('/src/store/useResumeStore.ts');
     const {storeFileHandle}=await import('/src/utils/fileSystem.ts');

@@ -1,6 +1,6 @@
 # Magic Resume Neo MCP
 
-MCP lets Codex or another compatible AI client read and edit the resumes in an explicitly connected **local browser**. Start the deployed app at <http://127.0.0.1:3210>, open the **MCP** pill, then choose **允许 AI 访问此浏览器**. Keep that browser tab open. Disconnect stops access; reloading requires a new connection.
+MCP lets Codex or another compatible AI client read and edit resumes in the connected **local browser**. It is enabled by default and connects automatically when the deployed local app at <http://127.0.0.1:3210> is open. Manage the switch and connection status under **通用设置 → AI · MCP**. Turning it off disconnects the browser and persists across reloads and restarts. Keep a local app tab open while using MCP.
 
 The `magic-resume-neo` stdio server is already registered with Codex on this machine. Start a new Codex chat or restart the client if newly registered tools are not yet visible. Each browser has separate localStorage: resumes on magicv.art are not automatically available locally. Export JSON from the original site and import it into the local app first.
 
@@ -60,7 +60,7 @@ Resumes remain browser-local; the server keeps paired snapshots in memory, witho
 
 `resume_undo` stores up to 30 prior MCP snapshots in the connected browser's memory. It can undo creation and deletion but refuses to overwrite subsequent manual edits. Disconnect/reload clears MCP undo; normal editor history remains separate. `resume_audit` holds the last 100 command outcomes in server memory, containing action/id/time/success metadata, not resume content. The browser and server must both remain online. Snapshots are limited to 32 MB; very large embedded images should be resized or exported separately. Browser localStorage capacity can be smaller; failed persistence is reported as an error and the in-memory edit is rolled back.
 
-After an acknowledgement timeout, read the current resume before retrying: the browser may already have applied the change. If the browser is offline, no background/disk edits are silently queued. Sessions are considered offline after 15 seconds without a heartbeat; at most 10 browser pairings are retained, with stale pairings removed after an hour. A server restart requires reconnecting the browser.
+After an acknowledgement timeout, read the current resume before retrying: the browser may already have applied the change. If the browser is offline, no background/disk edits are silently queued. Sessions are considered offline after 15 seconds without a heartbeat; at most 10 browser pairings are retained, with stale pairings removed after an hour. The browser reconnects automatically after a server restart while MCP remains enabled. A new connection has a new revision and clears MCP undo history; read again before editing.
 
 Edits to an existing resume use the normal store update path (and its configured folder sync). MCP deletion/undo operate on browser storage; they do not remove or restore separate exported JSON files. Keep JSON exports for backups beyond the current browser session.
 

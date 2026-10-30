@@ -290,6 +290,7 @@
       }
     },
     "settings": {
+      "mcp": {"title":"AI · MCP","off":"Off","connected":"Connected","connecting":"Connecting","guide":"Connection guide"},
       "title": "Settings",
       "description": "Manage workspace appearance and local resume backup settings.",
       "appearance": {
