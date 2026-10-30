@@ -16,6 +16,7 @@ test('atomic CRUD, field colors, module controls, protected fields and validatio
   assert.deepEqual(reset.resumes[id].globalSettings.fieldColors,{});
   const mod=applyOperation(reset.resumes,'module_create',{resume_id:id,data:{title:'Awards'}},blank); const mid=mod.result_id;
   const item=applyOperation(mod.resumes,'item_create',{resume_id:id,module_id:mid,data:{title:'Winner',hiddenFields:['dateRange'],fieldLabels:{title:'Award'},alignment:'center'}},blank);
+  const bold=applyOperation(item.resumes,'item_update',{resume_id:id,module_id:mid,item_id:item.result_id,data:{dateRange:'Any right content',fieldBold:{title:false,subtitle:true,dateRange:true}}},blank); assert.equal(bold.resumes[id].customData[mid][0].fieldBold.dateRange,true); assert.equal(bold.resumes[id].customData[mid][0].dateRange,'Any right content');
   assert.equal(item.resumes[id].customData[mid][0].title,'Winner'); assert.equal(created.resumes[id].customData[mid],undefined);
   assert.throws(()=>applyOperation(item.resumes,'item_reorder',{resume_id:id,module_id:mid,ids:[]},blank),/every existing id/);
   assert.throws(()=>applyOperation(item.resumes,'module_delete',{resume_id:id,module_id:'basic'},blank),/Built-in/);
@@ -23,7 +24,7 @@ test('atomic CRUD, field colors, module controls, protected fields and validatio
   assert.throws(()=>applyOperation(item.resumes,'resume_update',{resume_id:id,data:{basic:{githubKey:'secret'}}},blank),/Protected field/);
   assert.throws(()=>checkJson(JSON.parse('{"__proto__":{}}')),/Protected/);
   assert.throws(()=>checkJson('<img src=x onerror=alert(1)>'),/Unsafe/);
-  for(const data of [{title:{}},{subtitle:2},{visible:'yes'},{hiddenFields:'title'},{hiddenFields:false},{hiddenFields:0},{fieldLabels:false},{alignment:0},{hiddenFields:['bad']},{fieldLabels:{title:4}},{fieldLabels:{bad:'label'}},{alignment:'diagonal'}]) assert.throws(()=>applyOperation(item.resumes,'item_update',{resume_id:id,module_id:mid,item_id:item.result_id,data},blank));
+  for(const data of [{title:{}},{subtitle:2},{visible:'yes'},{hiddenFields:'title'},{hiddenFields:false},{hiddenFields:0},{fieldLabels:false},{alignment:0},{hiddenFields:['bad']},{fieldLabels:{title:4}},{fieldLabels:{bad:'label'}},{alignment:'diagonal'},{fieldBold:false},{fieldBold:{title:'yes'}},{fieldBold:{description:true}}]) assert.throws(()=>applyOperation(item.resumes,'item_update',{resume_id:id,module_id:mid,item_id:item.result_id,data},blank));
   for(const data of [{globalSettings:{baseFontSize:'huge'}},{globalSettings:{textColors:{body:{bad:true}}}},{globalSettings:{fontFamily:{bad:true}}},{globalSettings:{autoOnePage:'yes'}},{globalSettings:{dateFormat:'garbage'}},{templateId:{}},{basic:{customFields:'invalid'}},{basic:{photoConfig:{width:'large'}}}]) assert.throws(()=>applyOperation(item.resumes,'resume_update',{resume_id:id,data},blank));
   assert.throws(()=>applyOperation({},'resume_import',{data:{...blank,activeSection:{bad:true}}},blank),/activeSection/);
   assert.throws(()=>applyOperation(item.resumes,'resume_update',{resume_id:id,data:{basic:{fieldOrder:[{id:'icons',key:'icons',label:'Icons',visible:true}]}}},blank),/scalar/);

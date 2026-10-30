@@ -25,12 +25,12 @@ test('module navigation and custom controls work with collapsed sidebar and narr
   await nav.getByRole('button', { name: '添加模块', exact: true }).click();
   await page.getByRole('button', { name: '添加自定义模块', exact: true }).click();
   await page.getByText('未命名模块', { exact: true }).first().click();
-  const titleInput = page.locator('input[type="text"][placeholder="标题"]');
+  const titleInput = page.locator('input[type="text"][placeholder="左侧内容"]');
   await titleInput.fill('超级大赛');
-  await page.locator('input[type="text"][placeholder="副标题"]').fill('一等奖');
+  await page.locator('input[type="text"][placeholder="中间内容"]').fill('一等奖');
   await page.getByText('字段与排版', { exact: true }).click();
-  await page.getByRole('textbox', { name: '副标题字段名称', exact: true }).fill('奖项');
-  await page.getByRole('switch', { name: '在简历中显示副标题', exact: true }).click();
+  await page.getByRole('textbox', { name: '内容－中字段名称', exact: true }).fill('奖项');
+  await page.getByRole('switch', { name: '在简历中显示内容－中', exact: true }).click();
   await page.getByRole('button', { name: '居中', exact: true }).click();
   await page.getByRole('button', { name: '复制条目', exact: true }).click();
   const snapshot = await page.evaluate(async () => {

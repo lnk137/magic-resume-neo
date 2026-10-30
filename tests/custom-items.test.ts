@@ -36,3 +36,17 @@ test("cloning entries gives independent IDs, nested settings and color overrides
   assert.deepEqual(source.hiddenFields, ["dateRange"]);
   assert.equal(Object.keys(colors).length, 2);
 });
+
+ test("free text and independent bold survive visibility and cloning", async () => {
+  const { isCustomFieldBold, cloneCustomItems } = await import("../src/lib/customItems.ts");
+  const item = {id:"free",title:"Left",subtitle:"Middle",dateRange:"Award · Any text",description:"",visible:true};
+  assert.equal(isCustomFieldBold(item,"title"),true);
+  assert.equal(isCustomFieldBold(item,"dateRange"),false);
+  const styled = {...item,fieldBold:{title:false,subtitle:true,dateRange:true}};
+  const [rendered] = visibleCustomItems([styled]);
+  assert.equal(rendered.dateRange,item.dateRange);
+  assert.equal(isCustomFieldBold(rendered,"title"),false);
+  const {items:[copy]} = cloneCustomItems([styled],"source","target");
+  copy.fieldBold!.subtitle=false;
+  assert.equal(styled.fieldBold.subtitle,true);
+});

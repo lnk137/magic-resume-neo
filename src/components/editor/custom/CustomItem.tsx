@@ -1,4 +1,4 @@
-import { cloneCustomItems } from "@/lib/customItems";
+import { cloneCustomItems, isCustomFieldBold } from "@/lib/customItems";
 import { useCallback, useState } from "react";
 import {
   motion,
@@ -59,6 +59,8 @@ const CustomItemEditor = ({
         <div className="grid grid-cols-2 gap-4">
           <Field
             label={label("title")}
+            bold={isCustomFieldBold(item, "title")}
+            onBoldChange={(bold) => onSave({ ...item, fieldBold: { ...item.fieldBold, title: bold } })}
             colorPath={`customData.${sectionId}.${item.id}.title`}
             value={item.title}
             onChange={(value) => handleChange("title", value)}
@@ -66,6 +68,8 @@ const CustomItemEditor = ({
           />
           <Field
             label={label("subtitle")}
+            bold={isCustomFieldBold(item, "subtitle")}
+            onBoldChange={(bold) => onSave({ ...item, fieldBold: { ...item.fieldBold, subtitle: bold } })}
             colorPath={`customData.${sectionId}.${item.id}.subtitle`}
             value={item.subtitle}
             onChange={(value) => handleChange("subtitle", value)}
@@ -75,6 +79,8 @@ const CustomItemEditor = ({
 
         <Field
           label={label("dateRange")}
+            bold={isCustomFieldBold(item, "dateRange")}
+            onBoldChange={(bold) => onSave({ ...item, fieldBold: { ...item.fieldBold, dateRange: bold } })}
             colorPath={`customData.${sectionId}.${item.id}.dateRange`}
           value={item.dateRange}
           onChange={(value) => handleChange("dateRange", value)}

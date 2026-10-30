@@ -73,3 +73,5 @@ node --test tests/mcp.browser.mjs
 The integration test uses the official SDK client over stdio, verifies authenticated pairing, real command acknowledgement, stale revision rejection and offline errors. The browser test verifies live editing, JSON persistence, reload, safe rich text, custom module/item creation and guarded undo using an isolated browser profile.
 
 SDK implementation follows the [official MCP TypeScript SDK v1 server documentation](https://ts.sdk.modelcontextprotocol.io/server) and [transport security requirements](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports). The app ships the stable `@modelcontextprotocol/sdk` package; no LLM provider key is required to run this MCP server.
+
+Custom module `title`, `subtitle`, `dateRange` now represent free-form **left / center / right** content, not a required date range. `item_update` accepts `fieldBold: { title: false, subtitle: true, dateRange: true }` to set independent emphasis. These optional properties preserve compatibility with older resumes and JSON backups.

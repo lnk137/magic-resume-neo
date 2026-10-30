@@ -1,5 +1,10 @@
 import type { CustomItem } from "@/types/resume";
 
+/** Preserve the old title emphasis unless a slot has an explicit setting. */
+export function isCustomFieldBold(item: CustomItem, field: "title" | "subtitle" | "dateRange"): boolean {
+  return item.fieldBold?.[field] ?? field === "title";
+}
+
 /** Mask fields for rendering only. The editor and exported JSON keep the original data. */
 export function visibleCustomItems(items: CustomItem[] = []): CustomItem[] {
   return items.filter((item) => item.visible !== false).map((item) => {

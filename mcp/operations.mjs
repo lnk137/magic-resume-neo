@@ -65,6 +65,7 @@ export function validateResume(resume) {
   for (const entries of Object.values(resume.customData)) for (const entry of entries) {
     checkFields(entry,['title','subtitle','dateRange','description']);
     if (entry.hiddenFields !== undefined && (!Array.isArray(entry.hiddenFields) || entry.hiddenFields.some(f=>!['title','subtitle','dateRange','description'].includes(f)))) throw new Error('Invalid hiddenFields');
+    if (entry.fieldBold !== undefined) for (const [field, bold] of Object.entries(object(entry.fieldBold))) { if (!['title','subtitle','dateRange'].includes(field) || typeof bold !== 'boolean') throw new Error('Invalid fieldBold'); }
     if (entry.fieldLabels !== undefined) for(const [field,label] of Object.entries(object(entry.fieldLabels))) { if(!['title','subtitle','dateRange','description'].includes(field)) throw new Error('Invalid field label'); text(label,'field label'); }
     if (entry.alignment !== undefined && !['left','center','right'].includes(entry.alignment)) throw new Error('Invalid alignment');
   }

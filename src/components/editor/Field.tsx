@@ -1,7 +1,7 @@
 import { FieldColor } from "./FieldColor";
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { Bold, CalendarIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { useTranslations } from "@/i18n/compat/client";
 
 import { cn } from "@/lib/utils";
@@ -23,6 +23,8 @@ import { UnifiedDateRangeInput } from "../ui/unified-date-range-input";
 interface FieldProps {
   label?: string;
   colorPath?: string;
+  bold?: boolean;
+  onBoldChange?: (bold: boolean) => void;
   value: string;
   onChange: (value: string) => void;
   type?: "text" | "textarea" | "date" | "editor" | "date-range";
@@ -35,6 +37,8 @@ interface FieldProps {
 const Field = ({
   label,
   colorPath,
+  bold,
+  onBoldChange,
   value,
   onChange,
   type = "text",
@@ -100,7 +104,12 @@ const Field = ({
         <span className="text-sm text-foreground">
           {label}
         </span>
-        {colorPath && <FieldColor path={colorPath} label={label} />}
+        {(colorPath || onBoldChange) && (
+          <div className="ml-auto flex items-center gap-1">
+            {onBoldChange && <Button type="button" variant="ghost" size="sm" aria-label={`${label || "内容"}加粗`} title="加粗" aria-pressed={bold ?? false} className={cn("h-7 w-7 rounded-md p-0", bold && "bg-muted text-foreground")} onClick={() => onBoldChange(!bold)}><Bold className="h-3.5 w-3.5" /></Button>}
+            {colorPath && <FieldColor path={colorPath} label={label} />}
+          </div>
+        )}
         {showPresentSwitch && (
           <div className="flex items-center gap-2">
             <Switch
@@ -203,10 +212,12 @@ const Field = ({
   }
 
   return (
-    <label className="block">
+    <div className="block">
       {renderLabel()}
       <motion.input
         type="text"
+        aria-label={label}
+        style={bold === undefined ? undefined : { fontWeight: bold ? 700 : 400 }}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -215,7 +226,7 @@ const Field = ({
         whileHover={{ scale: 1.005 }}
         whileTap={{ scale: 0.995 }}
       />
-    </label>
+    </div>
   );
 };
 

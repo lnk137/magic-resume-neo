@@ -1,5 +1,6 @@
 import type { CustomItem, GlobalSettings, TextColorRole } from "@/types/resume";
 import { ResumeText } from "./ResumeText";
+import { isCustomFieldBold } from "@/lib/customItems";
 
 const COLUMNS = [
   { field: "title", align: "left", role: "title" },
@@ -17,7 +18,7 @@ export default function CustomItemHeader({ item, sectionId, globalSettings }: {
   return (
     <div data-custom-header={item.id} style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", alignItems: "baseline", gap: "0.75rem", fontSize: `${globalSettings?.subheaderSize || 16}px` }}>
       {COLUMNS.map(({ field, align, role }) => (
-        <div key={field} data-custom-column={align} className={field === "title" ? undefined : "text-subtitleFont"} style={{ minWidth: 0, textAlign: align, overflowWrap: "anywhere", whiteSpace: "pre-wrap", fontWeight: field === "title" ? 700 : 400 }}>
+        <div key={field} data-custom-column={align} className={field === "title" ? undefined : "text-subtitleFont"} style={{ minWidth: 0, textAlign: align, overflowWrap: "anywhere", whiteSpace: "pre-wrap", fontWeight: isCustomFieldBold(item, field) ? 700 : 400 }}>
           <ResumeText field={`customData.${sectionId}.${item.id}.${field}`} role={role as TextColorRole}>{item[field]}</ResumeText>
         </div>
       ))}

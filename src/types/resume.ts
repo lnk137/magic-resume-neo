@@ -206,6 +206,8 @@ export type CustomField = "title" | "subtitle" | "dateRange" | "description";
 export interface CustomItem {
   hiddenFields?: CustomField[];
   fieldLabels?: Partial<Record<CustomField, string>>;
+  /** Independent emphasis for the left, center and right free-text slots. */
+  fieldBold?: Partial<Record<Exclude<CustomField, "description">, boolean>>;
   /** Body text alignment; absent preserves the selected template. */
   alignment?: "left" | "center" | "right";
   id: string;
