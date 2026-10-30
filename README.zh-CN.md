@@ -1,3 +1,5 @@
+> 克隆后请先运行 `pnpm download:fonts`，再启动或构建项目。字体从固定版本的上游仓库下载并校验 SHA-256。
+
 # Magic Resume Neo · 魔方简历 Neo
 
 基于 [JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume) 的本机定制版本。保留上游协议与署名。

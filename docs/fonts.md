@@ -1,5 +1,7 @@
 # Font loading
 
+Font binaries are not included in this repository. After cloning, run `pnpm download:fonts` before development, builds, or exports. The script downloads pinned upstream files and verifies their SHA-256 hashes. It requires `curl` and supports standard proxy environment variables.
+
 Resume families, characters, outlines and layout metrics remain unchanged. The
 browser and export helpers both use the same full-character WOFF2 files. The
 original TTF/OTF files remain available for existing references and regeneration.

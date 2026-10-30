@@ -1,0 +1,133 @@
+{
+  "revision": "718b20aa2c1025dd161a5b6aa2299542139f5210",
+  "files": [
+    {
+      "path": "public/fonts/AlibabaPuHuiTi-3-55-Regular.ttf",
+      "sha256": "be33bc8d45ced30fa5c542f6f056565baf85003d4e079522110d76016f8a04e2"
+    },
+    {
+      "path": "public/fonts/AlibabaPuHuiTi-3-85-Bold.ttf",
+      "sha256": "d50f483fd8d9f95f9edbecdc199aee5fa9ddc5db8027f0d80334c3f502af61c8"
+    },
+    {
+      "path": "public/fonts/MiSans-Medium.ttf",
+      "sha256": "b8b1bdea22256904d05d576aa2e53d8092e5f92ea88ed6d68be6d827a82b402d"
+    },
+    {
+      "path": "public/fonts/MiSans-Normal.ttf",
+      "sha256": "1a5f4112daaa9473747c6834041646cc9b2c338cb40ab5dbb2f0161f8968ca10"
+    },
+    {
+      "path": "public/fonts/NotoSansSC-Bold.otf",
+      "sha256": "b5f0d1a190a7f9b43c310a8850630af12553df32c4c050543f9059732d9b4c0a"
+    },
+    {
+      "path": "public/fonts/NotoSansSC-Medium.otf",
+      "sha256": "ca094f6b0001fb048ca39ddd797a0cdb0179e1e55c6561e111c49c3e6a61d7b7"
+    },
+    {
+      "path": "public/fonts/NotoSansSC-Regular.otf",
+      "sha256": "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b"
+    },
+    {
+      "path": "public/fonts/NotoSansSC.ttf",
+      "sha256": "a0af66489baf1f306732ff16da58d86c342e0b3b4b3674079ee2a9b0aee23258"
+    },
+    {
+      "path": "public/fonts/SourceHanSerifSC-Bold.otf",
+      "sha256": "4ee555ae58b3d22f6a95c2c494f2c36b7cccfc1d2224635f6461a03756f0e3c1"
+    },
+    {
+      "path": "public/fonts/SourceHanSerifSC-Medium.otf",
+      "sha256": "f7906890686d17e122980efd2d6097d1caefed76312994baeaf220819e818f3a"
+    },
+    {
+      "path": "public/fonts/SourceHanSerifSC-Regular.otf",
+      "sha256": "3754ea669c530e2473354f8f6d9f79680a44d7e26ec7d00eeabee4a7e0753c5d"
+    },
+    {
+      "path": "public/fonts/Source_Han_Serif_SC_Light_Light.otf",
+      "sha256": "0d30bdcb33807298a6bc47c4db030385f44ca8010a21d370d66dee428e9cb032"
+    },
+    {
+      "path": "public/fonts/landing/misans-400.woff2",
+      "sha256": "55924e5492ef6bb10ee2762f797e0db568dfb14a04beb5cfb5470e87b5e353aa"
+    },
+    {
+      "path": "public/fonts/landing/misans-700.woff2",
+      "sha256": "9ee4a97e155ba2a471bb16b270211cb16ec4eab12e7b531bf1ecbef7fad0917c"
+    },
+    {
+      "path": "public/fonts/landing/source-han-serif-500.woff2",
+      "sha256": "754abac444abce25d7adf0c42be2ef420a6255ab995eff4f22d9172ad43c4b23"
+    },
+    {
+      "path": "public/fonts/resume/AlibabaPuHuiTi-3-55-Regular.17b7f33cdf67.woff2",
+      "sha256": "17b7f33cdf67d06be2b35984191dc489ad36390f14138c40295622677d754ea3"
+    },
+    {
+      "path": "public/fonts/resume/AlibabaPuHuiTi-3-85-Bold.c4c77b00723a.woff2",
+      "sha256": "c4c77b00723a72a5f7eaa5c24c8fe8aec37643e72d6f5ee053f05e292e42db67"
+    },
+    {
+      "path": "public/fonts/resume/MiSans-Medium.7eb477ef8ed2.woff2",
+      "sha256": "7eb477ef8ed2950171d6249db5623f09a0a82f7a30a2aaa759c7de3096c0b346"
+    },
+    {
+      "path": "public/fonts/resume/MiSans-Normal.07c198f1822a.woff2",
+      "sha256": "07c198f1822a2f5a03e4b613442c05aa781331ea26f5091e671192932eb7b7d0"
+    },
+    {
+      "path": "public/fonts/resume/NotoSansSC-Bold.cd441dc10e7d.woff2",
+      "sha256": "cd441dc10e7d450eb292b73a03a060a50ab88893fc9d69b9b143cd616b9c2ca5"
+    },
+    {
+      "path": "public/fonts/resume/NotoSansSC-Medium.186bbdc1118e.woff2",
+      "sha256": "186bbdc1118e9fab7e0ac812f8753bd19ffef0b09da54b5ccbf77b285871522d"
+    },
+    {
+      "path": "public/fonts/resume/NotoSansSC-Regular.689db17ebf1a.woff2",
+      "sha256": "689db17ebf1a1dc29b075c42d27a3101f4f91e888ded96dfe54af3d5df9faefa"
+    },
+    {
+      "path": "public/fonts/resume/SourceHanSerifSC-Bold.45ac121d4341.woff2",
+      "sha256": "45ac121d43412da054e89e65fd2bb4175b76f22fa2c80d99bc7296111e3f0f3a"
+    },
+    {
+      "path": "public/fonts/resume/SourceHanSerifSC-Medium.95e917169656.woff2",
+      "sha256": "95e917169656a2c3c6fce00eb7f7b89705abc06ba67022b1abf5dc21acf4fcec"
+    },
+    {
+      "path": "public/fonts/resume/SourceHanSerifSC-Regular.46fe81586efd.woff2",
+      "sha256": "46fe81586efda7bbd0d9b5a92092495ecd20597a0571a0734f291ddfdea6fd9c"
+    },
+    {
+      "path": "public/fonts/ui/newsreader-italic-latin-ext.750e9629f56a.woff2",
+      "sha256": "750e9629f56ae71980f1dde315f5bdb6c81b49b13a8fec3246a4392853aa7ccd"
+    },
+    {
+      "path": "public/fonts/ui/newsreader-italic-latin.a99fb127682b.woff2",
+      "sha256": "a99fb127682b9af538780d21420037452197b0d37dfd273eb108f8a3665d5501"
+    },
+    {
+      "path": "public/fonts/ui/newsreader-italic-vietnamese.d5a170a88bdb.woff2",
+      "sha256": "d5a170a88bdb4e21bcc743e8cf1a64835c8351f8e1d32dadd9cac77f2e718fbb"
+    },
+    {
+      "path": "public/fonts/ui/newsreader-normal-latin-ext.cbca00118885.woff2",
+      "sha256": "cbca001188852d514d8654be7ddc97868f039bdf986b926ec5c985c117853cfd"
+    },
+    {
+      "path": "public/fonts/ui/newsreader-normal-latin.01817351be3e.woff2",
+      "sha256": "01817351be3edfc1714fe6d60ddea6a22a169a5ebd033b50c7f9495e5d9c386a"
+    },
+    {
+      "path": "public/fonts/ui/newsreader-normal-vietnamese.68ef9a14f146.woff2",
+      "sha256": "68ef9a14f1462e2218ecd03c39d26236402ff6a9e78da39ba5591a430a229824"
+    },
+    {
+      "path": "fonts/GeistMonoVF.woff",
+      "sha256": "e8b65928f551b17e3d67c3f709721b952c39842d14b00701f9232057fde73608"
+    }
+  ]
+}

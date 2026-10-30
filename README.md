@@ -1,3 +1,5 @@
+> After cloning, run `pnpm download:fonts` before starting or building. Fonts are downloaded from a pinned upstream revision and verified by SHA-256.
+
 # Magic Resume Neo
 
 A local customized edition of [JOYCEQL/magic-resume](https://github.com/JOYCEQL/magic-resume), retaining the upstream license and attribution.

@@ -23,7 +23,8 @@
     "install:playwright": "playwright install chromium",
     "mcp": "node mcp/server.mjs",
     "test:mcp": "node --test tests/mcp.test.mjs",
-    "test:mcp-browser": "node --test tests/mcp.browser.mjs"
+    "test:mcp-browser": "node --test tests/mcp.browser.mjs",
+    "download:fonts": "node scripts/download-fonts.mjs"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
