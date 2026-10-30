@@ -15,6 +15,8 @@ test("custom markdown retains free right content, emphasis and field visibility"
   const markdown = generateResumeMarkdown(resume);
   assert.ok(markdown.includes("Project | **2026/02 - 2027/05**"));
   assert.ok(!markdown.includes("Hidden"));
+  resume.customData["custom-1"][0].separatorAfter = "line";
+  assert.ok(generateResumeMarkdown(resume).includes("\n\n---"));
   assert.ok(!markdown.includes("**Project**"));
   resume.customData["custom-1"][0].dateRange = "Any right text";
   assert.ok(generateResumeMarkdown(resume).includes("**Any right text**"));

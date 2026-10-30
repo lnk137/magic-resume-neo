@@ -64,6 +64,7 @@ export function validateResume(resume) {
   for (const entry of resume.certificates) { checkFields(entry,['url']); if(typeof entry.width !== 'number' || entry.width < 1 || entry.width > 100) throw new Error('Certificate width must be 1–100'); }
   for (const entries of Object.values(resume.customData)) for (const entry of entries) {
     checkFields(entry,['title','subtitle','dateRange','description']);
+    if (entry.separatorAfter !== undefined && !['line','space'].includes(entry.separatorAfter)) throw new Error('Invalid separatorAfter');
     if (entry.layoutMode !== undefined && !['original','free'].includes(entry.layoutMode)) throw new Error('Invalid layoutMode');
     if (entry.hiddenFields !== undefined && (!Array.isArray(entry.hiddenFields) || entry.hiddenFields.some(f=>!['title','subtitle','dateRange','description'].includes(f)))) throw new Error('Invalid hiddenFields');
     if (entry.fieldBold !== undefined) for (const [field, bold] of Object.entries(object(entry.fieldBold))) { if (!['title','subtitle','dateRange'].includes(field) || typeof bold !== 'boolean') throw new Error('Invalid fieldBold'); }

@@ -41,7 +41,7 @@ codex mcp add magic-resume-neo -- /opt/homebrew/bin/node /Users/lnk137/dev/proje
 
 `resume_schema` lists current templates, typography, colors and item options. `resume_update` merges basic fields and global styles, sets templates, and edits skills/self evaluation HTML. Use item tools for education, experience, projects, publications, certificates and custom modules. Use `module_update` to rename a module or change its visibility. Built-in modules can be hidden; custom modules can be deleted. All text color roles and stable field color paths are editable; set an optional color property to `null` to restore inheritance.
 
-Custom entries accept `layoutMode: "original" | "free"`. Missing mode uses the original template layout; newly created entries default to `free`. Switching modes preserves all content and formatting. The right slot remains literal text in both modes.
+Custom entries accept `separatorAfter: "line" | "space"`; omit it or set it to `null` on update for no separator. Custom entries accept `layoutMode: "original" | "free"`. Missing mode uses the original template layout; newly created entries default to `free`. Switching modes preserves all content and formatting. The right slot remains literal text in both modes.
 
 Every mutation requires the exact `expected_revision` returned by the latest read. If a person types while AI is working, a stale operation is rejected. With multiple connected browsers, use `session_id` from `resume_sessions`. Changes update the active preview and browser localStorage before success is returned. Import always creates a new resume and never overwrites an existing one.
 

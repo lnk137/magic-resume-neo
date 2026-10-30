@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { existsSync } from 'node:fs';
+import { chromium } from 'playwright';
+const origin=process.env.TEST_BASE_URL || 'http://127.0.0.1:3212';
+test('entry separators render, copy and persist in all templates', {timeout:90000}, async t => {
+ const edge='/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge';
+ const browser=await chromium.launch({executablePath:existsSync(chromium.executablePath())?undefined:edge});t.after(()=>browser.close());
+ const page=await browser.newPage({viewport:{width:1280,height:900}});await page.goto(`${origin}/app/dashboard`);
+ const {id,templates}=await page.evaluate(async()=>{const {useResumeStore}=await import('/src/store/useResumeStore.ts');const {DEFAULT_TEMPLATES}=await import('/src/components/templates/registry.ts');const id=useResumeStore.getState().createResume(null,true);const s=useResumeStore.getState(),r=s.activeResume;s.updateResume(id,{activeSection:'custom-test',menuSections:[...r.menuSections,{id:'custom-test',title:'比赛',icon:'',enabled:true,order:r.menuSections.length}],customData:{'custom-test':[{id:'entry',title:'第一组',subtitle:'',dateRange:'',description:'<p>正文</p>',visible:true},{id:'next',title:'第二组',subtitle:'',dateRange:'',description:'',visible:true}]}});return {id,templates:DEFAULT_TEMPLATES.map(t=>t.id)}});
+ await page.goto(`${origin}/app/workbench/${id}`);await page.getByRole('heading',{name:'第一组'}).first().click();await page.getByText('字段与排版',{exact:true}).first().click();await page.getByRole('group',{name:'条目后分隔'}).getByRole('button',{name:'淡线'}).click();
+ for(const template of templates){await page.evaluate(async template=>{const {useResumeStore}=await import('/src/store/useResumeStore.ts');useResumeStore.getState().setTemplate(template)},template);const line=page.locator('#resume-preview [data-custom-separator="line"]');assert.equal(await line.count(),1,template);assert.equal(await line.evaluate(e=>getComputedStyle(e).borderTopStyle),'solid');assert.equal(await line.evaluate(e=>getComputedStyle(e).borderTopColor),'rgb(225, 225, 225)');}
+ await page.getByRole('group',{name:'条目后分隔'}).getByRole('button',{name:'留白'}).click();assert.equal(await page.locator('#resume-preview [data-custom-separator="space"]').count(),1);await page.getByRole('button',{name:'复制条目'}).first().click();assert.equal(await page.locator('#resume-preview [data-custom-separator="space"]').count(),2);
+ await page.reload();await page.locator('#resume-preview [data-custom-separator="space"]').first().waitFor();assert.equal(await page.locator('#resume-preview [data-custom-separator="space"]').count(),2);
+ await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'内容',exact:true}).click();await page.getByRole('heading',{name:'第一组'}).first().click();await page.getByText('字段与排版',{exact:true}).first().click();const group=page.getByRole('group',{name:'条目后分隔'});await group.scrollIntoViewIfNeeded();const box=await group.boundingBox();assert.ok(box.x>=0&&box.x+box.width<=390);await page.screenshot({path:'node_modules/.cache/custom-separator.png'});
+});

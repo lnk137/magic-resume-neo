@@ -17,3 +17,5 @@ Custom entries have a **头部布局** choice: **原版布局** retains the sele
 Each free-text slot has an independent **B** button for bold. Left content defaults to bold for compatibility; center/right default to regular. Explicit settings persist in `fieldBold` keyed by the stable `title` / `subtitle` / `dateRange` identifiers, and survive copy, undo, reload, JSON export/import and MCP edits. Rich description text continues to use the rich-text toolbar.
 
 Markdown export also treats the right slot as plain text and preserves slot bold/hidden settings. It joins the visible slots with separators rather than applying date formatting; PDF/image/print use the selected layout from the preview; Markdown preserves content and emphasis but does not reproduce template positioning.
+
+Custom entries can add a separator after the entry through **字段与排版 → 条目后分隔**: choose **淡线** or transparent **留白**, or **无** to remove it. The choice follows the entry when reordered or copied and is reflected in the preview and PDF/image/print output. Markdown exports visible lines as `---`; transparent space cannot be represented reliably in Markdown.

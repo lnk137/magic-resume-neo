@@ -53,6 +53,14 @@ const CustomItemEditor = ({
               <Switch aria-label={`在简历中显示${defaultLabel}`} checked={!item.hiddenFields?.includes(key)} onCheckedChange={(checked) => onSave({ ...item, hiddenFields: checked ? (item.hiddenFields ?? []).filter((field) => field !== key) : [...(item.hiddenFields ?? []), key] })} />
             </div>
           ))}
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+            <span className="text-sm">条目后分隔</span>
+            <div className="flex rounded-md bg-muted p-1" role="group" aria-label="条目后分隔">
+              {([{ value: "none", label: "无" }, { value: "line", label: "淡线" }, { value: "space", label: "留白" }] as const).map(({ value, label }) => (
+                <Button key={value} type="button" size="sm" variant={(item.separatorAfter ?? "none") === value ? "secondary" : "ghost"} aria-pressed={(item.separatorAfter ?? "none") === value} onClick={() => onSave({ ...item, separatorAfter: value === "none" ? undefined : value })}>{label}</Button>
+              ))}
+            </div>
+          </div>
           <div className="flex items-center justify-between gap-3 pt-1">
             <span className="text-sm">正文对齐</span>
             <div className="flex gap-1">

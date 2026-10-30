@@ -1,3 +1,4 @@
+import CustomItemSeparator from "../../shared/CustomItemSeparator";
 import CustomItemHeader from "../../shared/CustomItemHeader";
 import { cn } from "@/lib/utils";
 import { visibleCustomItems } from "@/lib/customItems";
@@ -53,7 +54,8 @@ const CustomSection = ({ sectionId, title, items, globalSettings, showTitle = tr
                             />
                             </ResumeText>
                         )}
-                    </motion.div>
+                    <CustomItemSeparator item={item} />
+                        </motion.div>
                 ))}
             </AnimatePresence>
         </SectionWrapper>

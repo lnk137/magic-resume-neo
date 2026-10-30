@@ -322,7 +322,7 @@ const renderCustomSection = (title: string, items: CustomItem[]) => {
       const content = escapeMarkdownText(normalizeText(item[field]));
       return content && isCustomFieldBold(item, field) ? `**${content}**` : content;
     }).filter(Boolean).join(" | ");
-    return [header, markdownFromText(item.description)].filter(Boolean).join("\n\n");
+    return [header, markdownFromText(item.description), item.separatorAfter === "line" ? "---" : ""].filter(Boolean).join("\n\n");
   }).filter(Boolean);
   return blocks.length ? `## ${title}\n\n${blocks.join("\n\n")}` : "";
 };
